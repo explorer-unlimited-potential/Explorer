@@ -504,6 +504,9 @@
       border:1px solid var(--ring);
       border-radius:var(--radius);
       padding:16px;
+      display:flex;
+      flex-direction:column;
+      height:100%;
       box-shadow:var(--shadow);
       transition: transform .15s ease, border-color .2s;
       cursor:pointer;
@@ -537,7 +540,7 @@
 
     .tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
     .tag{font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid var(--tagBorder); background:var(--tagBg); color:var(--tagText);}
-    .foot{margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; color: rgba(148,163,184,.9); font-size:13px;}
+    .foot{margin-top:auto; padding-top:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; color: rgba(148,163,184,.9); font-size:13px;}
     .budget{color:#34d399; font-weight:800}
     .note{margin-top:10px; color: rgba(226,232,240,.84); font-size:14px; line-height:1.5}
     .empty{
