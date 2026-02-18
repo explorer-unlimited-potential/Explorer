@@ -995,6 +995,15 @@
         margin-top:14px;
       }
     }
+    /* 桌面版：將卡片底部資訊固定在預覽卡最下方 */
+      .card{
+        display:flex;
+        flex-direction:column;
+      }
+      .foot{
+        margin-top:auto;
+        padding-top:12px;
+      }
 
     /* ✅ Make category title readable in dark modal even if inline style exists */
     #categoryTitle{ color: var(--heading) !important; }

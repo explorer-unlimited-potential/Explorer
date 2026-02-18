@@ -472,6 +472,17 @@
       transition: transform .15s ease, border-color .2s;
       cursor:pointer;
     }
+    @media (min-width:981px){
+      .card{
+        display:flex;
+        flex-direction:column;
+        min-height:100%;
+      }
+      .foot{
+        margin-top:auto;
+        padding-top:12px;
+      }
+    }
     .card:hover{ transform: translateY(-3px); border-color: rgba(56,189,248,.55) }
     .card:focus{ outline: none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(56,189,248,.25)}
     .top{display:flex; align-items:center; gap:12px; margin-bottom:10px;}
