@@ -1658,6 +1658,21 @@
       return String(str ?? "").replace(/[&<>"'`=\/]/g, s => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'
       }[s]));
+      function normalizeSubjectLabel(subject, examType){
+      let normalized = String(subject ?? '').trim();
+      const type = String(examType ?? '').trim();
+
+      if(type === 'DSE') normalized = normalized.replace(/^DSE\s*/i, '');
+      if(type === 'IGCSE') normalized = normalized.replace(/^IGCSE\s*/i, '');
+      if(type === 'A-Level') normalized = normalized.replace(/^A-Level\s*/i, '');
+      if(type === 'IB') normalized = normalized.replace(/^IB\s*/i, '');
+      if(type === '小學') normalized = normalized.replace(/^小學\s*/, '');
+      if(type === '初中') normalized = normalized.replace(/^初中\s*/, '');
+      if(type === '幼稚園') normalized = normalized.replace(/^幼稚園\s*/, '');
+      if(type === '其他類別') normalized = normalized.replace(/^其他類別\s*/, '');
+
+      return normalized;
+    }
     }
     function colorFromName(name){ let h=0; for(let i=0;i<name.length;i++){ h=(h*31 + name.charCodeAt(i))%360; } return `hsl(${h} 70% 50%)`; }
     function scrollToTop(){ try{ window.scrollTo({top:0,behavior:'smooth'});}catch{ window.scrollTo(0,0);} }
