@@ -163,6 +163,7 @@
       box-shadow: var(--shadow); padding:20px;
     }
     .hero{ display:grid; gap:16px; }
+    .heroGrid{ display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:16px; align-items:start; }
     .h1{ margin:0; font-size:30px; letter-spacing:.01em; }
     .lead{ margin:10px 0 0; color:var(--muted); line-height:1.8; }
 
@@ -171,19 +172,32 @@
       display:inline-flex; align-items:center; gap:8px;
       padding:10px 12px; border-radius:999px; text-decoration:none;
       color:rgba(234,244,255,.96); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
-      font-size:14px;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.02em;
     }
+    .chip:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.07); }
     .chipDot{ width:7px; height:7px; border-radius:50%; background:#6fe7ff; box-shadow:0 0 0 4px rgba(111,231,255,.15); }
 
+    .sideCard{ padding:16px; }
+    .sideTitle{ margin:0; font-size:14px; font-weight:950; letter-spacing:.2px; }
+    .mini{ margin-top:10px; display:grid; gap:10px; color:var(--muted); font-size:13px; line-height:1.65; }
+    .mini b{ color: rgba(234,244,255,.98); }
     .sectionTitle{ margin:0 0 10px; font-size:22px; }
     .text{ margin:0; color:var(--muted); line-height:1.85; }
     .flowImg{ width:100%; border-radius:14px; border:1px solid rgba(255,255,255,.14); margin-top:12px; }
     .list{ margin:0; padding-left:20px; color:var(--muted); line-height:1.9; }
 
+    .faqList{ display:grid; gap:12px; }
+    .faqItem{ border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.05); padding:14px; }
+    .faqQ{ margin:0; font-size:15px; font-weight:900; }
+    .faqA{ margin:8px 0 0; color:var(--muted); line-height:1.75; }
+
     @media (max-width: 720px){
       .wrap{ padding:14px 14px 52px; }
       .topbar-inner{ padding:10px 14px; }
       .h1{ font-size:24px; }
+      .heroGrid{ grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -238,15 +252,28 @@
 
   <main class="wrap" role="main">
     <section class="hero">
-      <article class="reveal">
-        <h1 class="h1">配對方法</h1>
-        <p class="lead">快速了解 Explorer 的整體配對邏輯，並依你身份查看詳細流程。</p>
-        <div class="chips" aria-label="頁內快速導覽">
-          <a class="chip" href="#overview"><span class="chipDot" aria-hidden="true"></span>配對流程概覽</a>
-          <a class="chip" href="#student-flow"><span class="chipDot" aria-hidden="true"></span>學生尋找導師流程</a>
-          <a class="chip" href="#tutor-flow"><span class="chipDot" aria-hidden="true"></span>導師尋找學生流程</a>
-        </div>
-      </article>
+     <div class="heroGrid">
+        <article class="reveal card">
+          <h1 class="h1">配對方法</h1>
+          <p class="lead">快速了解 Explorer 的整體配對邏輯，並依你身份查看詳細流程。</p>
+          <div class="chips" aria-label="頁內快速導覽">
+            <a class="chip" href="#overview"><span class="chipDot" aria-hidden="true"></span>配對流程概覽</a>
+            <a class="chip" href="#student-flow"><span class="chipDot" aria-hidden="true"></span>學生尋找導師流程</a>
+            <a class="chip" href="#tutor-flow"><span class="chipDot" aria-hidden="true"></span>導師尋找學生流程</a>
+            <a class="chip" href="#summary"><span class="chipDot" aria-hidden="true"></span>重點摘要</a>
+            <a class="chip" href="#faq"><span class="chipDot" aria-hidden="true"></span>常見問題</a>
+          </div>
+        </article>
+
+        <aside class="sideCard card reveal" id="summary" aria-label="重點摘要">
+          <h2 class="sideTitle">重點摘要</h2>
+          <div class="mini">
+            <div>• <b>先看概覽圖</b>：可快速掌握由提交需求到正式上課的完整路徑。</div>
+            <div>• <b>學生流程</b>：提交需求後，平台會按條件推薦合適導師並協調首課安排。</div>
+            <div>• <b>導師流程</b>：完善資料並申請個案後，平台會協助對接與確認配對結果。</div>
+          </div>
+        </aside>
+      </div>
 
       <article class="reveal" id="overview" aria-label="配對流程概覽">
         <h2 class="sectionTitle">配對流程概覽</h2>
@@ -272,6 +299,24 @@
           <li>平台協調雙方需求並確認配對結果。</li>
           <li>完成首課後持續跟進，建立穩定教學安排。</li>
         </ol>
+      </article>
+
+      <article class="reveal card" id="faq" aria-label="常見問題">
+        <h2 class="sectionTitle">常見問題（FAQ）</h2>
+        <div class="faqList">
+          <div class="faqItem">
+            <h3 class="faqQ">配對一般要等幾耐？</h3>
+            <p class="faqA">視乎科目、時段及地區而定，通常提交完整需求後，平台會盡快安排合適人選並回覆配對進度。</p>
+          </div>
+          <div class="faqItem">
+            <h3 class="faqQ">如果首課後覺得不太合適可以點做？</h3>
+            <p class="faqA">可以向平台反映實際情況，我們會按雙方需要再作協調，協助你調整安排或尋找更合適的配對。</p>
+          </div>
+          <div class="faqItem">
+            <h3 class="faqQ">可唔可以只安排網課？</h3>
+            <p class="faqA">可以。提交需求時註明網課即可，平台會優先篩選可提供線上教學的導師。</p>
+          </div>
+        </div>
       </article>
     </section>
   </main>
