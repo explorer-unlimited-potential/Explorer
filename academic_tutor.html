@@ -1424,6 +1424,7 @@
             <option value="A-Level">A-Level</option>
             <option value="IB">IB</option>
             <option value="小學">小學</option>
+            <option value="初中">初中</option>
             <option value="幼稚園">幼稚園</option>
             <option value="其他類別">其他類別</option>
           </select>
@@ -1541,6 +1542,10 @@
       ],
       "小學": [
         "中文","英文","數學","常識","普通話","STEM/科學","寫作","閱讀理解","音樂","視覺藝術","體育","電腦/資訊科技"
+      ],
+      "初中": [
+        "中文","英文","數學","綜合科學","初中化學","初中生物","初中物理","初中商學",
+        "初中歷史","初中中史","電腦及資訊科技","初中地理","家政","視覺藝術","音樂","普通話"
       ],
       "幼稚園": [
         "中文（語文啟蒙）","英文（Phonics）","數學前概念","常識與探索","專注力/精細動作","普通話","音樂與律動","創意美術"
@@ -1917,11 +1922,27 @@
       return (c.gender || '') === g;
     }
 
+    function normalizeSubjectLabel(subject, examType){
+      let normalized = String(subject ?? '').trim();
+      const type = String(examType ?? '').trim();
+
+      if(type === 'DSE') normalized = normalized.replace(/^DSE\s*/i, '');
+      if(type === 'IGCSE') normalized = normalized.replace(/^IGCSE\s*/i, '');
+      if(type === 'A-Level') normalized = normalized.replace(/^A-Level\s*/i, '');
+      if(type === 'IB') normalized = normalized.replace(/^IB\s*/i, '');
+      if(type === '小學') normalized = normalized.replace(/^小學\s*/, '');
+      if(type === '初中') normalized = normalized.replace(/^初中\s*/, '');
+      if(type === '幼稚園') normalized = normalized.replace(/^幼稚園\s*/, '');
+      if(type === '其他類別') normalized = normalized.replace(/^其他類別\s*/, '');
+
+      return normalized;
+    }
+
     function passesCategory(c){
       if(categorySelected.size === 0) return true;
-      const subjList = (c.subjects || []).map(s => String(s).toLowerCase());
+      const subjList = (c.subjects || []).map(s => normalizeSubjectLabel(s, currentExamType).toLowerCase());
       for(const sel of categorySelected){
-        const needle = String(sel).toLowerCase();
+        const needle = normalizeSubjectLabel(sel, currentExamType).toLowerCase();
         if(subjList.some(s => s.includes(needle))) return true;
       }
       return false;
