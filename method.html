@@ -106,16 +106,56 @@
     .drawer.open{ transform: translateX(0); }
     .drawerInner{ height:100%; display:flex; flex-direction:column; padding:16px; gap:12px; }
     .drawerTop{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px; }
-    .drawerTitle{ font-weight:950; letter-spacing:.08em; font-size:13px; }
+    .drawerTitle{
+      font-weight:950;
+      letter-spacing:.08em;
+      font-size:13px;
+      color: rgba(234,244,255,.98);
+      text-transform:none;
+    }
 
-    .navList{ display:flex; flex-direction:column; gap:10px; }
+    .navList{ display:flex; flex-direction:column; gap:10px; padding-top:6px; }
     .navItem{
-      display:flex; justify-content:space-between; align-items:center; min-height:52px;
+      display:flex; justify-content:space-between; align-items:center; min-height:52px; gap:10px;
       border-radius:16px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05);
       color:rgba(234,244,255,.95); text-decoration:none; padding:12px;
+   transition: transform .16s ease, border-color .16s ease, background .16s ease;
     }
-    .navArrow svg{ width:18px; height:18px; }
+    .navItem:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.07);
+    }
+    .navLeft{ display:flex; flex-direction:column; min-width:0; }
+    .navMain{
+      font-weight:950;
+      letter-spacing:.04em;
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .navArrow{
+      width:28px; height:28px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      flex: 0 0 auto;
+    }
+    .navArrow svg{ width:16px; height:16px; color: rgba(234,244,255,.92); }
     .navArrow svg path{ stroke: currentColor !important; }
+
+    .reveal{
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.in{
+      opacity:1;
+      transform: translateY(0);
+    }
 
     .wrap{ max-width:var(--max); margin:0 auto; padding:18px 18px 56px; }
     .card{
@@ -187,18 +227,18 @@
       </div>
 
       <div class="navList">
-        <a class="navItem" href="/index.html"><span>主頁</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/method.html" aria-current="page"><span>配對方法</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/fees.html"><span>收費及付款詳情</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/contact.html"><span>聯絡我們</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/terms.html"><span>使用條款</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+         <a class="navItem" href="/index.html"><span class="navLeft"><span class="navMain">主頁</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/method.html" aria-current="page"><span class="navLeft"><span class="navMain">配對方法</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/fees.html"><span class="navLeft"><span class="navMain">收費及付款詳情</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/contact.html"><span class="navLeft"><span class="navMain">聯絡我們</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/terms.html"><span class="navLeft"><span class="navMain">使用條款</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
       </div>
     </div>
   </nav>
 
   <main class="wrap" role="main">
     <section class="hero">
-      <article class="card">
+      <article class="reveal">
         <h1 class="h1">配對方法</h1>
         <p class="lead">快速了解 Explorer 的整體配對邏輯，並依你身份查看詳細流程。</p>
         <div class="chips" aria-label="頁內快速導覽">
@@ -208,13 +248,13 @@
         </div>
       </article>
 
-      <article class="card" id="overview" aria-label="配對流程概覽">
+      <article class="reveal" id="overview" aria-label="配對流程概覽">
         <h2 class="sectionTitle">配對流程概覽</h2>
         <p class="text">以下流程圖顯示由提交需求、配對、確認安排到正式上課的主要步驟。建議先看全圖，再閱讀下面兩個角色的詳細說明。</p>
         <img class="flowImg" src="/assets/img/flow.png" alt="配對流程概覽圖" loading="lazy" decoding="async">
       </article>
 
-      <article class="card" id="student-flow" aria-label="學生尋找導師流程">
+      <article class="reveal" id="student-flow" aria-label="學生尋找導師流程">
         <h2 class="sectionTitle">學生尋找導師流程</h2>
         <ol class="list">
           <li>提交學習需求（科目、程度、時間、地區／網課）。</li>
@@ -224,7 +264,7 @@
         </ol>
       </article>
 
-      <article class="card" id="tutor-flow" aria-label="導師尋找學生流程">
+      <article class="reveal" id="tutor-flow" aria-label="導師尋找學生流程">
         <h2 class="sectionTitle">導師尋找學生流程</h2>
         <ol class="list">
           <li>註冊並完善導師資料（專長、經驗、可上課時段）。</li>
@@ -238,6 +278,21 @@
 
   <script>
     (function(){
+        const items = Array.from(document.querySelectorAll('.reveal'));
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach((e)=>{
+          if(e.isIntersecting){
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+      items.forEach((el, i)=>{
+        el.style.transitionDelay = (Math.min(i,6) * 70) + "ms";
+        io.observe(el);
+      });
+
       const menuBtn = document.getElementById('menuBtn');
       const drawer = document.getElementById('drawer');
       const overlay = document.getElementById('overlay');
