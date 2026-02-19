@@ -106,16 +106,56 @@
     .drawer.open{ transform: translateX(0); }
     .drawerInner{ height:100%; display:flex; flex-direction:column; padding:16px; gap:12px; }
     .drawerTop{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px; }
-    .drawerTitle{ font-weight:950; letter-spacing:.08em; font-size:13px; }
+    .drawerTitle{
+      font-weight:950;
+      letter-spacing:.08em;
+      font-size:13px;
+      color: rgba(234,244,255,.98);
+      text-transform:none;
+    }
 
-    .navList{ display:flex; flex-direction:column; gap:10px; }
+    .navList{ display:flex; flex-direction:column; gap:10px; padding-top:6px; }
     .navItem{
-      display:flex; justify-content:space-between; align-items:center; min-height:52px;
+      display:flex; justify-content:space-between; align-items:center; min-height:52px; gap:10px;
       border-radius:16px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05);
       color:rgba(234,244,255,.95); text-decoration:none; padding:12px;
+   transition: transform .16s ease, border-color .16s ease, background .16s ease;
     }
-    .navArrow svg{ width:18px; height:18px; }
+    .navItem:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.07);
+    }
+    .navLeft{ display:flex; flex-direction:column; min-width:0; }
+    .navMain{
+      font-weight:950;
+      letter-spacing:.04em;
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .navArrow{
+      width:28px; height:28px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      flex: 0 0 auto;
+    }
+    .navArrow svg{ width:16px; height:16px; color: rgba(234,244,255,.92); }
     .navArrow svg path{ stroke: currentColor !important; }
+
+    .reveal{
+      opacity:0;
+      transform: translateY(10px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.in{
+      opacity:1;
+      transform: translateY(0);
+    }
 
     .wrap{ max-width:var(--max); margin:0 auto; padding:18px 18px 56px; }
     .card{
@@ -123,6 +163,7 @@
       box-shadow: var(--shadow); padding:20px;
     }
     .hero{ display:grid; gap:16px; }
+    .heroGrid{ display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:16px; align-items:start; }
     .h1{ margin:0; font-size:30px; letter-spacing:.01em; }
     .lead{ margin:10px 0 0; color:var(--muted); line-height:1.8; }
 
@@ -131,19 +172,32 @@
       display:inline-flex; align-items:center; gap:8px;
       padding:10px 12px; border-radius:999px; text-decoration:none;
       color:rgba(234,244,255,.96); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
-      font-size:14px;
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.02em;
     }
+    .chip:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.07); }
     .chipDot{ width:7px; height:7px; border-radius:50%; background:#6fe7ff; box-shadow:0 0 0 4px rgba(111,231,255,.15); }
 
+    .sideCard{ padding:16px; }
+    .sideTitle{ margin:0; font-size:14px; font-weight:950; letter-spacing:.2px; }
+    .mini{ margin-top:10px; display:grid; gap:10px; color:var(--muted); font-size:13px; line-height:1.65; }
+    .mini b{ color: rgba(234,244,255,.98); }
     .sectionTitle{ margin:0 0 10px; font-size:22px; }
     .text{ margin:0; color:var(--muted); line-height:1.85; }
     .flowImg{ width:100%; border-radius:14px; border:1px solid rgba(255,255,255,.14); margin-top:12px; }
     .list{ margin:0; padding-left:20px; color:var(--muted); line-height:1.9; }
 
+    .faqList{ display:grid; gap:12px; }
+    .faqItem{ border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.05); padding:14px; }
+    .faqQ{ margin:0; font-size:15px; font-weight:900; }
+    .faqA{ margin:8px 0 0; color:var(--muted); line-height:1.75; }
+
     @media (max-width: 720px){
       .wrap{ padding:14px 14px 52px; }
       .topbar-inner{ padding:10px 14px; }
       .h1{ font-size:24px; }
+      .heroGrid{ grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -187,34 +241,47 @@
       </div>
 
       <div class="navList">
-        <a class="navItem" href="/index.html"><span>主頁</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/method.html" aria-current="page"><span>配對方法</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/fees.html"><span>收費及付款詳情</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/contact.html"><span>聯絡我們</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/terms.html"><span>使用條款</span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+         <a class="navItem" href="/index.html"><span class="navLeft"><span class="navMain">主頁</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/method.html" aria-current="page"><span class="navLeft"><span class="navMain">配對方法</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/fees.html"><span class="navLeft"><span class="navMain">收費及付款詳情</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/contact.html"><span class="navLeft"><span class="navMain">聯絡我們</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/terms.html"><span class="navLeft"><span class="navMain">使用條款</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
       </div>
     </div>
   </nav>
 
   <main class="wrap" role="main">
     <section class="hero">
-      <article class="card">
-        <h1 class="h1">配對方法</h1>
-        <p class="lead">快速了解 Explorer 的整體配對邏輯，並依你身份查看詳細流程。</p>
-        <div class="chips" aria-label="頁內快速導覽">
-          <a class="chip" href="#overview"><span class="chipDot" aria-hidden="true"></span>配對流程概覽</a>
-          <a class="chip" href="#student-flow"><span class="chipDot" aria-hidden="true"></span>學生尋找導師流程</a>
-          <a class="chip" href="#tutor-flow"><span class="chipDot" aria-hidden="true"></span>導師尋找學生流程</a>
-        </div>
-      </article>
+     <div class="heroGrid">
+        <article class="reveal card">
+          <h1 class="h1">配對方法</h1>
+          <p class="lead">快速了解 Explorer 的整體配對邏輯，並依你身份查看詳細流程。</p>
+          <div class="chips" aria-label="頁內快速導覽">
+            <a class="chip" href="#overview"><span class="chipDot" aria-hidden="true"></span>配對流程概覽</a>
+            <a class="chip" href="#student-flow"><span class="chipDot" aria-hidden="true"></span>學生尋找導師流程</a>
+            <a class="chip" href="#tutor-flow"><span class="chipDot" aria-hidden="true"></span>導師尋找學生流程</a>
+            <a class="chip" href="#summary"><span class="chipDot" aria-hidden="true"></span>重點摘要</a>
+            <a class="chip" href="#faq"><span class="chipDot" aria-hidden="true"></span>常見問題</a>
+          </div>
+        </article>
 
-      <article class="card" id="overview" aria-label="配對流程概覽">
+        <aside class="sideCard card reveal" id="summary" aria-label="重點摘要">
+          <h2 class="sideTitle">重點摘要</h2>
+          <div class="mini">
+            <div>• <b>先看概覽圖</b>：可快速掌握由提交需求到正式上課的完整路徑。</div>
+            <div>• <b>學生流程</b>：提交需求後，平台會按條件推薦合適導師並協調首課安排。</div>
+            <div>• <b>導師流程</b>：完善資料並申請個案後，平台會協助對接與確認配對結果。</div>
+          </div>
+        </aside>
+      </div>
+
+      <article class="reveal" id="overview" aria-label="配對流程概覽">
         <h2 class="sectionTitle">配對流程概覽</h2>
         <p class="text">以下流程圖顯示由提交需求、配對、確認安排到正式上課的主要步驟。建議先看全圖，再閱讀下面兩個角色的詳細說明。</p>
         <img class="flowImg" src="/assets/img/flow.png" alt="配對流程概覽圖" loading="lazy" decoding="async">
       </article>
 
-      <article class="card" id="student-flow" aria-label="學生尋找導師流程">
+      <article class="reveal" id="student-flow" aria-label="學生尋找導師流程">
         <h2 class="sectionTitle">學生尋找導師流程</h2>
         <ol class="list">
           <li>提交學習需求（科目、程度、時間、地區／網課）。</li>
@@ -224,7 +291,7 @@
         </ol>
       </article>
 
-      <article class="card" id="tutor-flow" aria-label="導師尋找學生流程">
+      <article class="reveal" id="tutor-flow" aria-label="導師尋找學生流程">
         <h2 class="sectionTitle">導師尋找學生流程</h2>
         <ol class="list">
           <li>註冊並完善導師資料（專長、經驗、可上課時段）。</li>
@@ -233,11 +300,44 @@
           <li>完成首課後持續跟進，建立穩定教學安排。</li>
         </ol>
       </article>
+
+      <article class="reveal card" id="faq" aria-label="常見問題">
+        <h2 class="sectionTitle">常見問題（FAQ）</h2>
+        <div class="faqList">
+          <div class="faqItem">
+            <h3 class="faqQ">配對一般要等幾耐？</h3>
+            <p class="faqA">視乎科目、時段及地區而定，通常提交完整需求後，平台會盡快安排合適人選並回覆配對進度。</p>
+          </div>
+          <div class="faqItem">
+            <h3 class="faqQ">如果首課後覺得不太合適可以點做？</h3>
+            <p class="faqA">可以向平台反映實際情況，我們會按雙方需要再作協調，協助你調整安排或尋找更合適的配對。</p>
+          </div>
+          <div class="faqItem">
+            <h3 class="faqQ">可唔可以只安排網課？</h3>
+            <p class="faqA">可以。提交需求時註明網課即可，平台會優先篩選可提供線上教學的導師。</p>
+          </div>
+        </div>
+      </article>
     </section>
   </main>
 
   <script>
     (function(){
+        const items = Array.from(document.querySelectorAll('.reveal'));
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach((e)=>{
+          if(e.isIntersecting){
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+      items.forEach((el, i)=>{
+        el.style.transitionDelay = (Math.min(i,6) * 70) + "ms";
+        io.observe(el);
+      });
+
       const menuBtn = document.getElementById('menuBtn');
       const drawer = document.getElementById('drawer');
       const overlay = document.getElementById('overlay');
