@@ -1573,6 +1573,7 @@
         experience:"多年操卷經驗，多位學生由 Level 3 升到 Level 5 或以上",
         qualification:"中大工程學系畢業",
         timeSlots:"一三五 晚上；週末日間",
+        teachingLanguages:["廣東話","英文","普通話"],
         notes:"上堂重視互動同理解，會先了解學生弱項再作針對訓練。\n可提供模擬試卷同進度報告畀家長 / 學生參考。"
       },
       {
@@ -1591,6 +1592,7 @@
         experience:"專教基礎打好中文、英文及數學，幫助學生適應小學課程",
         qualification:"幼兒教育學文憑",
         timeSlots:"平日放學後；六日上午",
+        teachingLanguages:["廣東話","英文","普通話"],
         notes:"用肌肉教學，令小朋友唔敢抗拒做功課",
         avatarUrl:"https://i.imgur.com/oAypM59.jpeg"
       },
@@ -1610,6 +1612,7 @@
         experience:"平均幫學生由 Band 5 升到 Band 6.5–7.0",
         qualification:"英國碩士畢業，IELTS 8.0",
         timeSlots:"平日晚間；週末部分時間",
+        teachingLanguages:["廣東話","英文","普通話"],
         notes:"重視口語及實際應用，會設計模擬考試情境"
       }
     ];
@@ -1936,7 +1939,7 @@
         c.district, c.areaDetail, c.mode,
         ...(c.targetLevels||[]),
         ...(c.examType||[]),
-        c.experience, c.qualification, c.timeSlots, c.notes,
+        c.experience, c.qualification, c.timeSlots, ...(c.teachingLanguages||[]), c.notes,
         (c.fee ?? "") + ""
       ].join(' ').toLowerCase();
       return hay.includes(k);
@@ -2103,6 +2106,7 @@
         <b>教學經驗</b><div>${esc(c.experience ?? '—')}</div>
         <b>學歷 / 資格</b><div>${esc(c.qualification ?? '—')}</div>
         <b>可授課時間</b><div>${esc(c.timeSlots ?? '—')}</div>
+        <b>教學語言</b><div>${esc((c.teachingLanguages||[]).join("、") || "—")}</div>
       `;
       kvNotes.textContent = c.notes || '—';
 

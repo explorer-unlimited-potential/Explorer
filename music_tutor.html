@@ -1625,6 +1625,7 @@
         experience:"多年教授初中級學生，擅長解構曲目分段練習",
         qualification:"ABRSM 鋼琴 8 級",
         timeSlots:"平日 19:00 後；週末上午",
+        teachingLanguage:["廣東話","普通話"],
         notes:"提供練習安排表，協助學生建立每日練習習慣"
       },
       {
@@ -1645,6 +1646,7 @@
         experience:"指導多位學生通過考級，注重分聲部練習",
         qualification:"Trinity 小提琴 8 級",
         timeSlots:"二四晚間；週末彈性",
+        teachingLanguage:["廣東話","普通話"],
         notes:"提供練習錄音回饋，協助調整拉奏姿勢"
       },
       {
@@ -1665,6 +1667,7 @@
         experience:"帶領學員參與社區演出，培養舞台自信",
         qualification:"Rockschool Saxophone Grade 8",
         timeSlots:"平日放學後；六日上午",
+        teachingLanguage:["廣東話","英文","普通話"],
         notes:"課程包含曲目分析與示範錄音",
         avatarUrl:"/assets/img/AG-202511-006.jpeg"
       },
@@ -1686,6 +1689,7 @@
         experience:"協助學生準備公開演出，強調舞台表現",
         qualification:"ABRSM 聲樂 8 級",
         timeSlots:"平日晚間；週末部分時間",
+        teachingLanguage:["廣東話","英文","普通話"],
         notes:"可提供暖聲與保養建議，避免聲帶疲勞"
       }
     ];
@@ -1985,7 +1989,7 @@
         c.district, c.areaDetail, c.mode,
         ...(c.targetLevels||[]),
         ...(c.examType||[]),
-        c.experience, c.qualification, c.timeSlots, c.notes,
+        c.experience, c.qualification, c.timeSlots, ...(c.teachingLanguages||[]), c.notes,
         (c.fee ?? "") + ""
       ].join(' ').toLowerCase();
       return hay.includes(k);
@@ -2155,6 +2159,7 @@
         <b>教學經驗</b><div>${esc(c.experience ?? '—')}</div>
         <b>資歷 / 證照</b><div>${esc(c.qualification ?? '—')}</div>
         <b>可授課時間</b><div>${esc(c.timeSlots ?? '—')}</div>
+        <b>教學語言</b><div>${esc((c.teachingLanguage||[]).join("、") || '—')}</div>
       `;
       kvNotes.textContent = c.notes || '—';
 

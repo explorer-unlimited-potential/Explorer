@@ -1633,6 +1633,7 @@
         experience:"曾任校隊助教，協助學生提升投籃穩定度與比賽判讀",
         qualification:"香港籃總一級教練證",
         timeSlots:"平日 19:00 後；週末上午",
+        teachingLanguage:["廣東話","英文","普通話"],
         notes:"會按球員位置設計訓練計劃，提供課後動作影片回饋"
       },
       {
@@ -1653,6 +1654,7 @@
         experience:"帶領多位學生成為校隊主力，重視腳步與反應速度",
         qualification:"羽毛球教練證書（中級）",
         timeSlots:"二四晚間；週末彈性",
+        teachingLanguage:["廣東話","英文","普通話"],
         notes:"提供每月訓練報告，協助家長掌握進度"
       },
       {
@@ -1673,6 +1675,7 @@
         experience:"協助學員改善划水效率，提升耐力與速度",
         qualification:"拯溺銅章 / 游泳教練證",
         timeSlots:"平日放學後；六日上午",
+        teachingLanguage:["廣東話","英文","普通話"],
         notes:"課程包含水中安全與自救技巧",
         avatarUrl:"/assets/img/AG-202511-006.jpeg"
       },
@@ -1694,6 +1697,7 @@
         experience:"曾帶領學員於校際網球賽獲獎，重視步法與擊球落點",
         qualification:"香港網球總會認可教練",
         timeSlots:"平日傍晚；週末上午",
+        teachingLanguage:["廣東話","英文","普通話"],
         notes:"可按學員水平安排單打或雙打實戰訓練"
       }
     ];
@@ -1992,7 +1996,7 @@
         c.district, c.areaDetail, c.mode,
         ...(c.targetLevels||[]),
         ...(c.examType||[]),
-        c.experience, c.qualification, c.timeSlots, c.notes,
+        c.experience, c.qualification, c.timeSlots, ...(c.teachingLanguage||[]), c.notes,
         (c.fee ?? "") + ""
       ].join(' ').toLowerCase();
       return hay.includes(k);
@@ -2161,6 +2165,7 @@
         <b>教練經驗</b><div>${esc(c.experience ?? '—')}</div>
         <b>資歷 / 證照</b><div>${esc(c.qualification ?? '—')}</div>
         <b>可授課時間</b><div>${esc(c.timeSlots ?? '—')}</div>
+        <b>教學語言</b><div>${esc((c.teachingLanguage||[]).join("、") || '—')}</div>
       `;
       kvNotes.textContent = c.notes || '—';
 

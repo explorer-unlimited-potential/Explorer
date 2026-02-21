@@ -1552,6 +1552,7 @@
         sessionDuration:"1.5 小時 / 堂",
         startDate:"下月初",
         timeSlots:"二四 晚間",
+        teachingLanguagePref:"廣東話",
         notes:"準備英國皇家八級考試，需加強音階與視奏，並安排考前模擬",
         gender:"男導師"
       },
@@ -1571,6 +1572,7 @@
         sessionDuration:"1.5 小時 / 堂",
         startDate:"兩週內",
         timeSlots:"一三五 晚上；週末日間",
+        teachingLanguagePref:"廣東話",
         notes:"希望改善持弓與音準，並學習簡單合奏技巧",
         gender:"女導師"
       },
@@ -1590,6 +1592,7 @@
         sessionDuration:"1 小時 / 堂",
         startDate:"下月初",
         timeSlots:"平日放學後；六日上午",
+        teachingLanguagePref:"廣東話",
         notes:"家長希望建立節奏感與基本和弦，提升自信心",
         gender:"不限導師性別"
       },
@@ -1609,6 +1612,7 @@
         sessionDuration:"1.5 小時 / 堂",
         startDate:"可議",
         timeSlots:"平日晚間；週末部分時間",
+        teachingLanguagePref:"廣東話",
         notes:"希望改善氣息與共鳴，準備校內演出",
         gender:"不限導師性別"
       }
@@ -2103,6 +2107,7 @@
         <b>可開始日期</b><div>${esc(c.startDate ?? '—')}</div>
         <b>導師性別偏好</b><div>${esc(c.gender ?? '不限導師性別')}</div>
         <b>時段偏好</b><div>${esc(c.timeSlots ?? '—')}</div>
+        <b>教學語言偏好</b><div>${esc(c.teachingLanguagePref ?? '廣東話、英文、普通話')}</div>
       `;
       kvNotes.textContent = c.notes || '—';
 

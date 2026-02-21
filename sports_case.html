@@ -1560,6 +1560,7 @@
         sessionDuration:"2 小時 / 堂",
         startDate:"可議",
         timeSlots:"二四 晚間",
+        teachingLanguagePref:"廣東話",
         notes:"目標提升 100m / 200m 起跑與衝刺節奏，包含伸展與力量安排",
         gender:"男教練"
       },
@@ -1579,6 +1580,7 @@
         sessionDuration:"1.5 小時 / 堂",
         startDate:"兩週內",
         timeSlots:"一三五 晚上；週末日間",
+        teachingLanguagePref:"廣東話",
         notes:"希望加強正手高遠球與防守反擊，兼顧體能",
         gender:"女教練"
       },
@@ -1598,6 +1600,7 @@
         sessionDuration:"1 小時 / 堂",
         startDate:"下月初",
         timeSlots:"平日放學後；六日上午",
+        teachingLanguagePref:"廣東話",
         notes:"家長希望建立正確呼吸與打水節奏，提升耐力",
         gender:"不限教練性別"
       },
@@ -1617,6 +1620,7 @@
         sessionDuration:"1.5 小時 / 堂",
         startDate:"可議",
         timeSlots:"平日晚間；週末部分時間",
+        teachingLanguagePref:"廣東話",
         notes:"想改善路線閱讀與核心穩定，避免肩肘受傷",
         gender:"不限教練性別"
       }
@@ -2111,6 +2115,7 @@
         <b>可開始日期</b><div>${esc(c.startDate ?? '—')}</div>
         <b>教練性別偏好</b><div>${esc(c.gender ?? '不限教練性別')}</div>
         <b>時段偏好</b><div>${esc(c.timeSlots ?? '—')}</div>
+        <b>教學語言偏好</b><div>${esc(c.teachingLanguagePref ?? '廣東話、英文、普通話')}</div>
       `;
       kvNotes.textContent = c.notes || '—';
 
