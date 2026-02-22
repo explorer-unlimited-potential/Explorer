@@ -594,10 +594,16 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
+    .profile-card--basic{
+      display:flex;
+      flex-direction:column;
+    }
+    .profile-card--basic .kv{flex:1}
     .profile-title{margin:0 0 8px 0; font-size:15px; color: rgba(196,181,253,.92)}
     .kv{display:grid; grid-template-columns: 120px 1fr; gap:8px 12px; font-size:14px}
     .kv b{color: rgba(248,250,252,.92); font-weight:700}
     .cta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .profile-card--basic .cta-row{margin-top:auto; padding-top:12px}
     .copy{
       cursor:pointer;
       border:1px solid rgba(255,255,255,.18);
@@ -1388,7 +1394,7 @@
 
       <div class="body">
         <div class="profile-grid">
-          <div class="profile-card">
+          <div class="profile-card profile-card--basic">
             <h3 class="profile-title">基本資料</h3>
             <div class="kv" id="kv-basic"></div>
             <div class="cta-row">
