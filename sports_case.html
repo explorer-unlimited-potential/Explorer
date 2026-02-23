@@ -42,11 +42,10 @@
       border-bottom: 1px solid rgba(255,255,255,.10);
     }
     .topbar-inner{
-      display: flex;
-      width: 100%;
-      max-width: none;
-      margin: 0;
-      padding: 12px 12px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display:flex;
       align-items:center;
       justify-content:space-between;
       gap: 12px;
@@ -262,9 +261,9 @@
     }
 
     @media (max-width: 720px){
-      .topbar-inner{ padding: 10px 12px; }
+      .topbar-inner{ padding: 10px 14px; }
     }
-    header{
+    header:not(.topbar){
       display:flex;
       align-items:flex-end;
       justify-content:space-between;
