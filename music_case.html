@@ -934,8 +934,7 @@
     }
 
     .quaver{ width:28px; height:28px; position:relative; z-index:1; }
-    .quaver path,
-    .quaver circle{
+    .quaver path{
       stroke:var(--accent);
       stroke-width:1.7;
       stroke-linecap:round;
@@ -943,9 +942,14 @@
     }
     .quaver circle{
       fill:var(--accent);
-      stroke:none;
     }
     .quaver{
+      stroke:var(--accent);
+      stroke-width:1.7;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+    .book{
       filter:
         drop-shadow(0 6px 12px rgba(0,0,0,.55))
         drop-shadow(0 0 10px rgba(56,189,248,.18));
@@ -1258,7 +1262,7 @@
       <div class="banner-inner">
         <div class="banner-title">
           <span class="logo-wrap" aria-hidden="true">
-            <!-- Quaver icon -->
+            <!-- Quaver music note -->
             <svg class="quaver" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 4.8v11.3" />
               <path d="M12 4.8c3 .4 5.6 1.9 7.2 3.8v3.1c-1.9-1.9-4.4-3.3-7.2-3.8" opacity=".85"/>
