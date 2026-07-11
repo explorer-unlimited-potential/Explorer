@@ -236,9 +236,10 @@
     .navMain{
       font-weight: 600;
       font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.35;
     }
     .navArrow{
       width: 28px;
@@ -1208,6 +1209,15 @@
 
         <a class="navItem" href="/method.html">
           <div class="navLeft"><div class="navMain">配對方法</div></div>
+          <div class="navArrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="navItem" href="/matching_tutor_find_student.html">
+          <div class="navLeft"><div class="navMain">配對方法：導師尋找學生</div></div>
           <div class="navArrow" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

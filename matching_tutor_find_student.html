@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Explorer｜配對方法：導師尋找學生</title>
+  <style>
+    :root{
+      --base:#070d14;
+      --text:#eaf4ff;
+      --muted: rgba(184,199,217,.92);
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.05);
+      --stroke: rgba(255,255,255,.12);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+      --glassBlur: 14px;
+      --max: 1020px;
+      --modalBg: rgba(0,0,0,.65);
+      --accent:#6fe7ff;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, -apple-system, "Noto Sans TC", system-ui, "PingFang TC", "Heiti TC", Arial, sans-serif;
+      color: var(--text);
+      background: var(--base);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset:-20%;
+      z-index:-2;
+      background:
+        radial-gradient(1200px 800px at 12% 20%, rgba(21,76,107,.55), transparent 60%),
+        radial-gradient(900px 700px at 85% 30%, rgba(111,231,255,.18), transparent 55%),
+        radial-gradient(900px 700px at 55% 90%, rgba(21,76,107,.32), transparent 55%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0, rgba(255,255,255,.05) 1px, transparent 1px, transparent 88px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0, rgba(255,255,255,.04) 1px, transparent 1px, transparent 88px),
+        linear-gradient(180deg, var(--base), var(--base));
+      opacity:.24;
+      pointer-events:none;
+    }
+    body::after{
+      content:"";
+      position: fixed;
+      inset:-160px;
+      z-index:-1;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(111,231,255,.14), transparent 44%),
+        radial-gradient(circle at 75% 60%, rgba(21,76,107,.24), transparent 52%);
+      filter: blur(18px);
+      opacity:.95;
+      pointer-events:none;
+    }
+
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(var(--glassBlur));
+      -webkit-backdrop-filter: blur(var(--glassBlur));
+      background: rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .topbar-inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 12px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .brand{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .logo{
+      width:40px; height:40px; border-radius:14px; display:grid; place-items:center;
+      background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow);
+      color: rgba(234,244,255,.92); flex:0 0 auto;
+    }
+    .logo svg{ width:22px; height:22px; }
+    .logo svg path{ stroke: currentColor !important; }
+    .brandText{ min-width:0; line-height:1.05; }
+    .brandText .title{
+      font-weight:950;
+      letter-spacing:.12em;
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .brandText .sub{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .menuBtn,.closeBtn{
+      width:44px; height:44px; border-radius:16px; display:grid; place-items:center;
+      background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+      color: rgba(234,244,255,.92); cursor:pointer;
+    }
+    .menuBtn svg,.closeBtn svg{ width:22px; height:22px; }
+    .menuBtn svg path,.closeBtn svg path{ stroke: currentColor !important; }
+
+    .overlay{ position:fixed; inset:0; background:var(--modalBg); opacity:0; pointer-events:none; transition:opacity .22s ease; z-index:40; }
+    .overlay.open{ opacity:1; pointer-events:auto; }
+
+    .drawer{
+      position: fixed; top:0; right:0; height:100%; width:min(92vw, 360px);
+      transform: translateX(105%); transition: transform .28s cubic-bezier(.2,.8,.2,1); z-index:50;
+      background: rgba(255,255,255,.06); border-left:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow:-18px 0 60px rgba(0,0,0,.45);
+    }
+    .drawer.open{ transform: translateX(0); }
+    .drawerInner{ height:100%; display:flex; flex-direction:column; padding:16px; gap:12px; overflow:auto; }
+    .drawerTop{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:10px; }
+    .drawerTitle{ font-weight:950; letter-spacing:.08em; font-size:13px; color: rgba(234,244,255,.98); }
+    .navList{ display:flex; flex-direction:column; gap:10px; padding-top:6px; }
+    .navItem{
+      display:flex; justify-content:space-between; align-items:center; min-height:52px; gap:10px;
+      border-radius:16px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05);
+      color:rgba(234,244,255,.95); text-decoration:none; padding:12px;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .navItem:hover,.navItem[aria-current="page"]{ transform: translateY(-1px); border-color: rgba(111,231,255,.32); background: rgba(111,231,255,.08); }
+    .navLeft{ display:flex; flex-direction:column; min-width:0; }
+    .navMain{ font-weight:950; letter-spacing:.04em; font-size:13px; line-height:1.35; }
+    .navArrow{
+      width:28px; height:28px; border-radius:999px; display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.05); flex:0 0 auto;
+    }
+    .navArrow svg{ width:16px; height:16px; color: rgba(234,244,255,.92); }
+    .navArrow svg path{ stroke: currentColor !important; }
+
+    .wrap{ max-width:var(--max); margin:0 auto; padding:18px 18px 56px; }
+    .card{
+      background: var(--card);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      padding:20px;
+    }
+    .heroGrid{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:16px; align-items:start; }
+    .h1{ margin:0; font-size:clamp(25px, 4vw, 38px); letter-spacing:.01em; line-height:1.2; }
+    .lead{ margin:12px 0 0; color:var(--muted); line-height:1.85; }
+    .chips{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    .chip,.primaryBtn,.ghostBtn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      min-height:42px; padding:10px 13px; border-radius:999px; text-decoration:none;
+      color:rgba(234,244,255,.96); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+      font-size:13px; font-weight:900; letter-spacing:.02em;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .chip:hover,.primaryBtn:hover,.ghostBtn:hover{ transform: translateY(-1px); border-color: rgba(111,231,255,.35); background: rgba(111,231,255,.10); }
+    .chipDot{ width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(111,231,255,.15); flex:0 0 auto; }
+    .primaryBtn{ background:rgba(111,231,255,.14); border-color:rgba(111,231,255,.38); }
+    .sideTitle{ margin:0; font-size:14px; font-weight:950; letter-spacing:.2px; }
+    .mini{ margin-top:10px; display:grid; gap:10px; color:var(--muted); font-size:13px; line-height:1.65; }
+    .mini b{ color: rgba(234,244,255,.98); }
+    .section{ margin-top:18px; }
+    .sectionTitle{ margin:0 0 10px; font-size:24px; line-height:1.25; }
+    .text{ margin:0; color:var(--muted); line-height:1.85; }
+    .stepFlow{ display:grid; gap:16px; margin-top:16px; }
+    .stepCard{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(240px, 42%);
+      gap:18px;
+      align-items:start;
+      background:var(--card2);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow: 0 12px 42px rgba(0,0,0,.22);
+    }
+    .stepCard.noMedia{ grid-template-columns:1fr; }
+    .stepText{ min-width:0; }
+    .stepNo{
+      width:40px; height:40px; border-radius:14px; display:grid; place-items:center;
+      background:rgba(111,231,255,.12); border:1px solid rgba(111,231,255,.24);
+      font-weight:950; color:rgba(234,244,255,.98); margin-bottom:10px;
+    }
+    .stepTitle{ margin:0; font-size:20px; line-height:1.35; }
+    .stepDesc{ margin:10px 0 0; color:var(--muted); line-height:1.85; }
+    .stepLink{ color:rgba(234,244,255,.98); text-underline-offset:4px; }
+    .stepMedia{
+      margin:0;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+      background:rgba(255,255,255,.04);
+      align-self:stretch;
+    }
+    .stepMedia img{
+      display:block;
+      width:100%;
+      height:100%;
+      min-height:220px;
+      max-height:360px;
+      object-fit:contain;
+      background:rgba(3,9,16,.34);
+    }
+    .finalCard{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-top:16px;
+      background:rgba(111,231,255,.08);
+      border-color:rgba(111,231,255,.22);
+    }
+    .finalCard h2{ margin:0; font-size:22px; }
+    .finalCard p{ margin:8px 0 0; color:var(--muted); line-height:1.75; }
+    .reveal{ opacity:0; transform:translateY(10px); transition:opacity .6s ease, transform .6s ease; }
+    .reveal.in{ opacity:1; transform:translateY(0); }
+
+    @media (max-width: 760px){
+      .wrap{ padding:14px 14px 52px; }
+      .topbar-inner{ padding:10px 14px; }
+      .brandText .sub{ max-width:210px; }
+      .heroGrid{ grid-template-columns:1fr; }
+      .card{ padding:16px; }
+      .chips{ overflow-x:auto; flex-wrap:nowrap; padding-bottom:4px; scrollbar-width:thin; }
+      .chip{ flex:0 0 auto; white-space:nowrap; }
+      .stepFlow{
+        display:flex;
+        overflow-x:auto;
+        gap:12px;
+        padding:2px 2px 12px;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+      }
+      .stepCard{
+        flex:0 0 min(88vw, 420px);
+        display:flex;
+        flex-direction:column;
+        scroll-snap-align:start;
+        padding:14px;
+      }
+      .stepMedia{ order:-1; }
+      .stepMedia img{ min-height:260px; max-height:360px; }
+      .stepTitle{ font-size:18px; }
+      .finalCard{ flex-direction:column; align-items:flex-start; }
+      .primaryBtn{ width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M3.5 11.5 21 3.5l-8 17-2.5-6-7-3Z" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M21 3.5 10.5 14.5" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brandText">
+          <div class="title">EXPLORER</div>
+          <div class="sub">配對方法：導師尋找學生</div>
+        </div>
+      </div>
+      <button class="menuBtn" id="menuBtn" type="button" aria-label="開啟導航列" aria-controls="drawer" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 7h14" stroke-width="2" stroke-linecap="round"/>
+          <path d="M5 12h14" stroke-width="2" stroke-linecap="round"/>
+          <path d="M5 17h14" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <nav class="drawer" id="drawer" aria-label="導航列" aria-hidden="true">
+    <div class="drawerInner">
+      <div class="drawerTop">
+        <div class="drawerTitle">導航</div>
+        <button class="closeBtn" id="closeBtn" type="button" aria-label="關閉導航列">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+            <path d="M18 6L6 18" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="navList">
+        <a class="navItem" href="/index.html"><span class="navLeft"><span class="navMain">主頁</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/method.html"><span class="navLeft"><span class="navMain">配對方法</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/matching_tutor_find_student.html" aria-current="page"><span class="navLeft"><span class="navMain">配對方法：導師尋找學生</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/fees.html"><span class="navLeft"><span class="navMain">收費及付款詳情</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/contact.html"><span class="navLeft"><span class="navMain">聯絡我們</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/terms.html"><span class="navLeft"><span class="navMain">使用條款</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap" role="main">
+    <section class="heroGrid">
+      <article class="reveal card">
+        <h1 class="h1">配對方法：導師尋找學生</h1>
+        <p class="lead">以下流程協助導師了解由登記、瀏覽招聘個案、提交申請到完成配對的完整步驟。</p>
+        <div class="chips" aria-label="頁內快速導覽">
+          <a class="chip" href="#steps"><span class="chipDot" aria-hidden="true"></span>7 步配對流程</a>
+          <a class="chip" href="#join"><span class="chipDot" aria-hidden="true"></span>立即成為導師</a>
+          <a class="chip" href="/method.html"><span class="chipDot" aria-hidden="true"></span>返回配對方法</a>
+        </div>
+      </article>
+
+      <aside class="reveal card" aria-label="重點摘要">
+        <h2 class="sideTitle">重點摘要</h2>
+        <div class="mini">
+          <div>• <b>先完成導師登記</b>，取得導師編號後便可開始尋找個案。</div>
+          <div>• <b>按資料卡申請</b>，平台會把你的導師資料傳送給學生或家長查閱。</div>
+          <div>• <b>成功配對後</b>，雙方確認課程細節即可開始上課。</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal" id="steps" aria-label="7 步配對流程">
+      <h2 class="sectionTitle">7 步配對流程</h2>
+      <p class="text">手機版可左右滑動查看每個步驟的圖片與說明。</p>
+
+      <div class="stepFlow">
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">1</div>
+            <h3 class="stepTitle">登記成為導師</h3>
+            <p class="stepDesc">前往 <a class="stepLink" href="https://forms.gle/BZjSrwFSwLqW8sPy6" target="_blank" rel="noopener">導師登記表格</a> 填寫並提交申請表格去註冊成為導師。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/tutor_find_student_1.png" alt="登記成為導師表格畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">2</div>
+            <h3 class="stepTitle">透過電郵獲得導師編號</h3>
+            <p class="stepDesc">完成登記後，你會收到一封系統發出的電郵，當中包括了你的導師編號。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/tutor_find_student_2.png" alt="透過電郵獲得導師編號畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">3</div>
+            <h3 class="stepTitle">瀏覽所屬「尋找招聘個案」</h3>
+            <p class="stepDesc">你現在可以在你所登記的項目中尋找學生或學生家長所發佈的招聘個案。你可以查看並尋找適合你的個案。你可以按下招聘個案的資料卡去查看更多資料，並開始申請。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/tutor_find_student_3.png" alt="瀏覽尋找招聘個案畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">4</div>
+            <h3 class="stepTitle">「立即申請」成為學生的導師</h3>
+            <p class="stepDesc">你可以在招聘個案的資料卡內按下「立即申請」鍵去應徵及申請成為學生的導師或教練。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/tutor_find_student_4.png" alt="立即申請按鈕畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">5</div>
+            <h3 class="stepTitle">填妥並提交「立即申請」表格</h3>
+            <p class="stepDesc">當你填妥並提交申請表格後，我們就會把你的導師資料傳送給你所申請的學生 / 學生家長去查閱。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/tutor_find_student_5.png" alt="填妥並提交立即申請表格畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">6</div>
+            <h3 class="stepTitle">安排聯絡並商討課程細節</h3>
+            <p class="stepDesc">當學生或學生家長有意接受你的申請並希望你成為他的導師或教練時，平台會安排你們聯絡並商討課程細節，包括上課時間及薪酬等。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/tutor_find_student_6.png" alt="安排聯絡並商討課程細節畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard noMedia">
+          <div class="stepText">
+            <div class="stepNo">7</div>
+            <h3 class="stepTitle">完成！</h3>
+            <p class="stepDesc">當課程細節商討完結並雙方達成協議後，整個配對流程將會完成。導師首兩節課的學費將會被我們平台抽取作為中介費用。隨後課堂的學費將會全數由導師或教練（或其指定收款人）安排收取。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="finalCard card reveal" id="join" aria-label="立即成為導師">
+      <div>
+        <h2>完成</h2>
+        <p>準備好開始尋找學生？提交登記表格後，平台會按流程協助你取得導師編號並申請合適個案。</p>
+      </div>
+      <a class="primaryBtn" href="https://forms.gle/BZjSrwFSwLqW8sPy6" target="_blank" rel="noopener">立即成為導師</a>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const items = Array.from(document.querySelectorAll('.reveal'));
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach((e)=>{
+          if(e.isIntersecting){
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+      items.forEach((el, i)=>{
+        el.style.transitionDelay = (Math.min(i,6) * 70) + "ms";
+        io.observe(el);
+      });
+
+      const menuBtn = document.getElementById('menuBtn');
+      const drawer = document.getElementById('drawer');
+      const overlay = document.getElementById('overlay');
+      const closeBtn = document.getElementById('closeBtn');
+      if(!menuBtn || !drawer || !overlay || !closeBtn) return;
+
+      function openNav(){
+        drawer.classList.add('open');
+        overlay.classList.add('open');
+        drawer.setAttribute('aria-hidden', 'false');
+        overlay.setAttribute('aria-hidden', 'false');
+        menuBtn.setAttribute('aria-expanded', 'true');
+      }
+      function closeNav(){
+        drawer.classList.remove('open');
+        overlay.classList.remove('open');
+        drawer.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('aria-hidden', 'true');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
+
+      menuBtn.addEventListener('click', () => drawer.classList.contains('open') ? closeNav() : openNav());
+      closeBtn.addEventListener('click', closeNav);
+      overlay.addEventListener('click', closeNav);
+      document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && drawer.classList.contains('open')) closeNav();
+      });
+      drawer.addEventListener('click', (e) => {
+        if(e.target.closest('a')) closeNav();
+      });
+    })();
+  </script>
+</body>
+</html>

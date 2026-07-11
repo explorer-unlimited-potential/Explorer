@@ -131,9 +131,10 @@
       font-weight:950;
       letter-spacing:.04em;
       font-size:13px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.35;
     }
     .navArrow{
       width:28px; height:28px;
@@ -188,6 +189,59 @@
     .flowImg{ width:100%; border-radius:14px; border:1px solid rgba(255,255,255,.14); margin-top:12px; }
     .list{ margin:0; padding-left:20px; color:var(--muted); line-height:1.9; }
 
+    .detailActions{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+    .detailBtn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      min-height:58px;
+      padding:14px 16px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:rgba(234,244,255,.96);
+      text-decoration:none;
+      font-weight:950;
+      line-height:1.35;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .detailBtn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(111,231,255,.35);
+      background:rgba(111,231,255,.09);
+    }
+    .detailBtn.isDisabled{
+      cursor:not-allowed;
+      opacity:.62;
+    }
+    .detailBtn.isDisabled:hover{
+      transform:none;
+      border-color:rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+    }
+    .detailArrow{
+      width:30px;
+      height:30px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      flex:0 0 auto;
+    }
+    .detailArrow svg{
+      width:16px;
+      height:16px;
+      color:rgba(234,244,255,.92);
+    }
+    .detailArrow svg path{ stroke:currentColor !important; }
+
     .faqList{ display:grid; gap:12px; }
     .faqItem{ border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.05); padding:14px; }
     .faqQ{ margin:0; font-size:15px; font-weight:900; }
@@ -198,6 +252,7 @@
       .topbar-inner{ padding:10px 14px; }
       .h1{ font-size:24px; }
       .heroGrid{ grid-template-columns:1fr; }
+      .detailActions{ grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -243,6 +298,7 @@
       <div class="navList">
          <a class="navItem" href="/index.html"><span class="navLeft"><span class="navMain">主頁</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         <a class="navItem" href="/method.html" aria-current="page"><span class="navLeft"><span class="navMain">配對方法</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/matching_tutor_find_student.html"><span class="navLeft"><span class="navMain">配對方法：導師尋找學生</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         <a class="navItem" href="/fees.html"><span class="navLeft"><span class="navMain">收費及付款詳情</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         <a class="navItem" href="/contact.html"><span class="navLeft"><span class="navMain">聯絡我們</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         <a class="navItem" href="/terms.html"><span class="navLeft"><span class="navMain">使用條款</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
@@ -258,6 +314,7 @@
           <p class="lead">快速了解 Explorer 的整體配對邏輯，並依你身份查看詳細流程。</p>
           <div class="chips" aria-label="頁內快速導覽">
             <a class="chip" href="#overview"><span class="chipDot" aria-hidden="true"></span>配對流程概覽</a>
+            <a class="chip" href="#detail-flow"><span class="chipDot" aria-hidden="true"></span>詳細配對流程</a>
             <a class="chip" href="#student-flow"><span class="chipDot" aria-hidden="true"></span>學生尋找導師流程</a>
             <a class="chip" href="#tutor-flow"><span class="chipDot" aria-hidden="true"></span>導師尋找學生流程</a>
             <a class="chip" href="#summary"><span class="chipDot" aria-hidden="true"></span>重點摘要</a>
@@ -279,6 +336,21 @@
         <h2 class="sectionTitle">配對流程概覽</h2>
         <p class="text">以下流程圖顯示由提交需求、配對、確認安排到正式上課的主要步驟。建議先看全圖，再閱讀下面兩個角色的詳細說明。</p>
         <img class="flowImg" src="/assets/img/flow.png" alt="配對流程概覽圖" loading="lazy" decoding="async">
+      </article>
+
+      <article class="reveal card" id="detail-flow" aria-label="詳細配對流程">
+        <h2 class="sectionTitle">詳細配對流程</h2>
+        <p class="text">你可以按身份查看更完整的操作步驟、截圖說明及後續安排。導師尋找學生流程已可查看；學生尋找導師流程頁面將稍後加入。</p>
+        <div class="detailActions">
+          <a class="detailBtn" href="/matching_tutor_find_student.html">
+            <span>配對方法：導師尋找學生</span>
+            <span class="detailArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </a>
+          <span class="detailBtn isDisabled" aria-disabled="true">
+            <span>配對方法：學生尋找導師</span>
+            <span class="detailArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </div>
       </article>
 
       <article class="reveal" id="student-flow" aria-label="學生尋找導師流程">
