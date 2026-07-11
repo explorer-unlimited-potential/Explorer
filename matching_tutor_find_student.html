@@ -150,7 +150,14 @@
       padding:20px;
     }
     .heroGrid{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:16px; align-items:start; }
-    .h1{ margin:0; font-size:clamp(25px, 4vw, 38px); letter-spacing:.01em; line-height:1.2; }
+    .h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+      font-weight:950;
+      line-height:1.2;
+      color:rgba(234,244,255,.98);
+    }
     .lead{ margin:12px 0 0; color:var(--muted); line-height:1.85; }
     .chips{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
     .chip,.primaryBtn,.ghostBtn{
@@ -225,6 +232,7 @@
     @media (max-width: 760px){
       .wrap{ padding:14px 14px 52px; }
       .topbar-inner{ padding:10px 14px; }
+      .h1{ font-size:22px; }
       .brandText .sub{ max-width:210px; }
       .heroGrid{ grid-template-columns:1fr; }
       .card{ padding:16px; }
