@@ -1184,6 +1184,38 @@
 
   <div class="overlay" id="overlay" aria-hidden="true"></div>
 
+  <style>
+    .drawer details > summary::-webkit-details-marker{ display:none; }
+    .drawer details[open] > summary .navArrow{ transform:rotate(90deg); }
+    .drawer details > .navItem:not(summary){
+      min-height:0;
+      margin:0;
+      padding:9px 20px 9px 34px !important;
+      border:0 !important;
+      border-radius:0 !important;
+      background:transparent !important;
+      box-shadow:none !important;
+    }
+    .drawer details > .navItem:not(summary):hover{
+      transform:none;
+      background:transparent !important;
+      opacity:.72;
+    }
+    .drawer details > .navItem:not(summary) .navMain{
+      font-size:14px;
+      font-weight:600;
+      line-height:1.35;
+    }
+    .drawer details > .navItem[aria-current="page"]:not(summary){
+      color:var(--accent, #8fc9ff);
+      opacity:1;
+    }
+    .drawer details > .navItem[aria-disabled="true"]{
+      opacity:.42 !important;
+    }
+  </style>
+
+
   <nav class="drawer" id="drawer" aria-label="導航列" aria-hidden="true">
     <div class="drawerInner">
       <div class="drawerTop">
@@ -1206,23 +1238,25 @@
           </div>
         </a>
 
-        <a class="navItem" href="/method.html">
-          <div class="navLeft"><div class="navMain">配對方法</div></div>
-          <div class="navArrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </a>
-
-        <a class="navItem" href="/matching_tutor_find_student.html">
-          <div class="navLeft"><div class="navMain">配對方法：導師尋找學生</div></div>
-          <div class="navArrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-        </a>
+        <details>
+          <summary class="navItem" style="list-style:none;cursor:pointer">
+            <div class="navLeft"><div class="navMain">配對方法</div></div>
+            <div class="navArrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </summary>
+          <a class="navItem" href="/method.html" style="padding-left:32px">
+            <div class="navLeft"><div class="navMain">配對方法概覽</div></div>
+          </a>
+          <a class="navItem" href="/matching_tutor_find_student.html" style="padding-left:32px">
+            <div class="navLeft"><div class="navMain">詳細配對方法：導師尋找學生</div></div>
+          </a>
+          <span class="navItem" aria-disabled="true" style="padding-left:32px;opacity:.55;cursor:not-allowed">
+            <div class="navLeft"><div class="navMain">詳細配對方法：學生尋找導師（未加入）</div></div>
+          </span>
+        </details>
 
         <a class="navItem" href="/fees.html">
           <div class="navLeft"><div class="navMain">收費及付款詳情</div></div>

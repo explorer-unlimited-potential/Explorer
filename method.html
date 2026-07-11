@@ -283,6 +283,38 @@
 
   <div class="overlay" id="overlay" aria-hidden="true"></div>
 
+  <style>
+    .drawer details > summary::-webkit-details-marker{ display:none; }
+    .drawer details[open] > summary .navArrow{ transform:rotate(90deg); }
+    .drawer details > .navItem:not(summary){
+      min-height:0;
+      margin:0;
+      padding:9px 20px 9px 34px !important;
+      border:0 !important;
+      border-radius:0 !important;
+      background:transparent !important;
+      box-shadow:none !important;
+    }
+    .drawer details > .navItem:not(summary):hover{
+      transform:none;
+      background:transparent !important;
+      opacity:.72;
+    }
+    .drawer details > .navItem:not(summary) .navMain{
+      font-size:14px;
+      font-weight:600;
+      line-height:1.35;
+    }
+    .drawer details > .navItem[aria-current="page"]:not(summary){
+      color:var(--accent, #8fc9ff);
+      opacity:1;
+    }
+    .drawer details > .navItem[aria-disabled="true"]{
+      opacity:.42 !important;
+    }
+  </style>
+
+
   <nav class="drawer" id="drawer" aria-label="導航列" aria-hidden="true">
     <div class="drawerInner">
       <div class="drawerTop">
@@ -297,8 +329,12 @@
 
       <div class="navList">
          <a class="navItem" href="/index.html"><span class="navLeft"><span class="navMain">主頁</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/method.html" aria-current="page"><span class="navLeft"><span class="navMain">配對方法</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
-        <a class="navItem" href="/matching_tutor_find_student.html"><span class="navLeft"><span class="navMain">配對方法：導師尋找學生</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <details open>
+          <summary class="navItem" style="list-style:none;cursor:pointer"><span class="navLeft"><span class="navMain">配對方法</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary>
+          <a class="navItem" href="/method.html" aria-current="page" style="padding-left:32px"><span class="navLeft"><span class="navMain">配對方法概覽</span></span></a>
+          <a class="navItem" href="/matching_tutor_find_student.html" style="padding-left:32px"><span class="navLeft"><span class="navMain">詳細配對方法：導師尋找學生</span></span></a>
+          <span class="navItem" aria-disabled="true" style="padding-left:32px;opacity:.55;cursor:not-allowed"><span class="navLeft"><span class="navMain">詳細配對方法：學生尋找導師（未加入）</span></span></span>
+        </details>
         <a class="navItem" href="/fees.html"><span class="navLeft"><span class="navMain">收費及付款詳情</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         <a class="navItem" href="/contact.html"><span class="navLeft"><span class="navMain">聯絡我們</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         <a class="navItem" href="/terms.html"><span class="navLeft"><span class="navMain">使用條款</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
