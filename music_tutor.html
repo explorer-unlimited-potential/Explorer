@@ -528,9 +528,11 @@
       display:block;
     }
     .who{display:flex; flex-direction:column; gap:3px;}
-    .who .name{font-weight:700}
+    .who .name{display:flex; align-items:center; gap:7px; flex-wrap:wrap; font-weight:700}
     .who .muted{color:var(--muted); font-size:13px}
     .who .gender{color: rgba(226,232,240,.78); font-weight:600; font-size:12px}
+    .verified-badge{display:inline-flex; align-items:center; gap:4px; padding:3px 7px; border:1px solid rgba(52,211,153,.38); border-radius:999px; background:rgba(16,185,129,.12); color:#6ee7b7; font-size:11px; font-weight:700; line-height:1; white-space:nowrap}
+    .verified-badge svg{flex:0 0 auto}
 
     .row{display:flex; align-items:center; gap:8px; margin:8px 0; color: rgba(248,250,252,.92); font-size:14px}
     .row svg{opacity:.95}
@@ -2133,7 +2135,7 @@
                   : initials}
               </div>
               <div class="who">
-                <div class="name">${esc(c.name)}　<small class="gender">${esc(c.gender || '')}</small></div>
+                <div class="name">${esc(c.name)} <small class="gender">${esc(c.gender || '')}</small><span class="verified-badge" title="平台已核實此導師的資歷" aria-label="資歷已認證"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="m4.7 8.1 2.05 2.05 4.55-4.6" stroke="#052e2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>資歷已認證</span></div>
                 <div class="muted">導師編號：${esc(c.id || '-') }</div>
               </div>
             </div>
