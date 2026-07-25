@@ -176,7 +176,7 @@
             <a class="pill" href="/sports_case.html"><i></i>體育運動</a>
             <a class="pill" href="/music_case.html"><i></i>音樂</a>
             <a class="pill" href="/fitness_case.html"><i></i>健身</a>
-            <a class="pill" href="/other_case.html"><i></i>其他興趣</a>
+            <span class="pill pill-disabled" aria-disabled="true"><i></i>其他興趣</span>
           </div>
         </div>
 
@@ -200,7 +200,7 @@
             <a class="pill" href="/sports_tutor.html"><i></i>體育運動</a>
             <a class="pill" href="/music_tutor.html"><i></i>音樂</a>
             <a class="pill" href="/fitness_tutor.html"><i></i>健身</a>
-            <a class="pill" href="/other_tutor.html"><i></i>其他興趣</a>
+            <span class="pill pill-disabled" aria-disabled="true"><i></i>其他興趣</span>
           </div>
         </div>
       </div>
@@ -607,6 +607,22 @@
     width: 8px; height: 8px; border-radius: 999px;
     background: radial-gradient(circle at 30% 30%, rgba(169,244,255,1), rgba(111,231,255,1));
     box-shadow: 0 0 16px rgba(111,231,255,.45);
+ }
+ .pill-disabled{
+    color: rgba(255,255,255,.38);
+    border-color: rgba(255,255,255,.07);
+    background: rgba(255,255,255,.025);
+    cursor: not-allowed;
+    pointer-events: none;
+ }
+ .pill-disabled:hover{
+    transform: none;
+    border-color: rgba(255,255,255,.07);
+    background: rgba(255,255,255,.025);
+ }
+ .pill-disabled i{
+    background: rgba(255,255,255,.22);
+    box-shadow: none;
  }
 
  .flowPanel{ margin-top: 14px; }

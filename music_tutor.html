@@ -1478,7 +1478,7 @@
 
         <div class="field">
          <span class="label"> 導師編號</span>
-          <input id="idq" type="text" placeholder="輸入編號（如：MU10986）" />
+          <input id="idq" type="text" placeholder="輸入編號（如：MU36894）" />
         </div>
       </div>
 
@@ -1709,48 +1709,6 @@
         timeSlots:"二四晚間；週末彈性",
         teachingLanguage:["廣東話","普通話"],
         notes:"提供練習錄音回饋，協助調整拉奏姿勢"
-      },
-      {
-        id:"MU10986",
-        name:"Felix Cheng",
-        gender:"男導師",
-        age:"35 歲",
-        intro:"薩克斯風與爵士即興教學，協助建立呼吸與音色控制",
-        years:"10 年",
-        mainCategory:"薩克斯風",
-        subjects:["長音訓練","即興段落","節奏型練習"],
-        district:"元朗區",
-        areaDetail:"天水圍 / 元朗 音樂工作室",
-        fee:260,
-        mode:"面授 / 可安排小組",
-        targetLevels:["中學","成人"],
-        examType:["演奏準備","比賽曲目"],
-        experience:"帶領學員參與社區演出，培養舞台自信",
-        qualification:"Rockschool Saxophone Grade 8",
-        timeSlots:"平日放學後；六日上午",
-        teachingLanguage:["廣東話","英文","普通話"],
-        notes:"課程包含曲目分析與示範錄音"
-      },
-      {
-        id:"MU62543",
-        name:"Natalie Poon",
-        gender:"女導師",
-        age:"27 歲",
-        intro:"歌唱發聲與呼吸控制訓練，提升音域與情感表達",
-        years:"4 年",
-        mainCategory:"歌唱聲樂",
-        subjects:["發聲練習","氣息控制","歌曲詮釋"],
-        district:"灣仔區",
-        areaDetail:"灣仔 / 銅鑼灣 錄音室；亦可上門",
-        fee:360,
-        mode:"面授 / 網上",
-        targetLevels:["初學者","在職人士"],
-        examType:["演出準備","比賽選曲"],
-        experience:"協助學生準備公開演出，強調舞台表現",
-        qualification:"ABRSM 聲樂 8 級",
-        timeSlots:"平日晚間；週末部分時間",
-        teachingLanguage:["廣東話","英文","普通話"],
-        notes:"可提供暖聲與保養建議，避免聲帶疲勞"
       }
     ];
 
@@ -2134,7 +2092,7 @@
                   : initials}
               </div>
               <div class="who">
-                <div class="name">${esc(c.name)} <small class="gender">${esc(c.gender || '')}</small><span class="verified-badge" title="平台已核實此導師的資歷" aria-label="資歷已認證"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="m4.7 8.1 2.05 2.05 4.55-4.6" stroke="#052e2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>資歷已認證</span></div>
+                <div class="name">${esc(c.name)} <small class="gender">${esc(c.gender || '')}</small>${c.qualification ? `<span class="verified-badge" title="平台已核實此導師的資歷" aria-label="資歷已認證"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="m4.7 8.1 2.05 2.05 4.55-4.6" stroke="#052e2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>資歷已認證</span>` : ''}</div>
                 <div class="muted">導師編號：${esc(c.id || '-') }</div>
               </div>
             </div>
@@ -2217,7 +2175,7 @@
         <b>對象</b><div>${esc((c.targetLevels||[]).join('、') || '—')}</div>
         <b>教學重點</b><div>${esc((c.examType||[]).join('、') || '—')}</div>
         <b>教學經驗</b><div>${esc(c.experience ?? '—')}</div>
-        <b>資歷 / 牌照</b><div>${esc(c.qualification ?? '—')}</div>
+        <b>資歷 / 牌照</b><div>${esc(c.qualification ?? '')}</div>
         <b>可授課時間</b><div>${esc(c.timeSlots ?? '—')}</div>
         <b>教學語言</b><div>${esc((c.teachingLanguage||[]).join("、") || '—')}</div>
       `;

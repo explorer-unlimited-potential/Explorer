@@ -1677,7 +1677,6 @@
         targetLevels:["成人入門","健身習慣建立"],
         examType:["體脂管理","肌力提升"],
         experience:"協助學員建立重量訓練基礎，改善體態與核心力量",
-        qualification:"私人健身教練證照",
         timeSlots:"平日 19:00 後；週末上午",
         teachingLanguages:["廣東話","普通話"],
         notes:"提供每週訓練與飲食建議，並追蹤重量與體脂數據"
@@ -1698,7 +1697,6 @@
         targetLevels:["上班族","減脂需求"],
         examType:["體脂管理","心肺提升"],
         experience:"帶領小組燃脂課程，強調安全動作與節奏控制",
-        qualification:"團體課程教練證照",
         timeSlots:"二四晚間；週末彈性",
         teachingLanguages:["廣東話","普通話"],
         notes:"提供每月體態追蹤與課後伸展建議"
@@ -1740,7 +1738,6 @@
         targetLevels:["初學者","久坐族"],
         examType:["體態改善","活動度提升"],
         experience:"設計適合上班族的伸展計劃，改善肩頸緊繃與僵硬",
-        qualification:"運動伸展指導證照",
         timeSlots:"平日晚間；週末部分時間",
         teachingLanguages:["廣東話","普通話"],
         notes:"可提供客製化伸展清單與居家放鬆指南"
@@ -2129,7 +2126,7 @@
                   : initials}
               </div>
               <div class="who">
-                <div class="name">${esc(c.name)} <small class="gender">${esc(c.gender || '')}</small><span class="verified-badge" title="平台已核實此教練的資歷" aria-label="資歷已認證"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="m4.7 8.1 2.05 2.05 4.55-4.6" stroke="#052e2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>資歷已認證</span></div>
+                <div class="name">${esc(c.name)} <small class="gender">${esc(c.gender || '')}</small>${c.qualification ? `<span class="verified-badge" title="平台已核實此教練的資歷" aria-label="資歷已認證"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="m4.7 8.1 2.05 2.05 4.55-4.6" stroke="#052e2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>資歷已認證</span>` : ''}</div>
                 <div class="muted">教練編號：${esc(c.id || '-') }</div>
               </div>
             </div>
@@ -2209,7 +2206,7 @@
         <b>對象</b><div>${esc((c.targetLevels||[]).join('、') || '—')}</div>
         <b>訓練重點</b><div>${esc((c.examType||[]).join('、') || '—')}</div>
         <b>教練經驗</b><div>${esc(c.experience ?? '—')}</div>
-        <b>資歷 / 牌照</b><div>${esc(c.qualification ?? '—')}</div>
+        <b>資歷 / 牌照</b><div>${esc(c.qualification ?? '')}</div>
         <b>可授課時間</b><div>${esc(c.timeSlots ?? '—')}</div>
         <b>教學語言</b><div>${esc((c.teachingLanguages||[]).join("、") || "—")}</div>
       `;
