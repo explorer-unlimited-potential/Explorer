@@ -1717,7 +1717,8 @@
       return String(str ?? "").replace(/[&<>"'`=\/]/g, s => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'
       }[s]));
-      function normalizeSubjectLabel(subject, examType){
+    }
+    function normalizeSubjectLabel(subject, examType){
       let normalized = String(subject ?? '').trim();
       const type = String(examType ?? '').trim();
 
@@ -1731,7 +1732,6 @@
       if(type === '其他類別') normalized = normalized.replace(/^其他類別\s*/, '');
 
       return normalized;
-    }
     }
     function colorFromName(name){ let h=0; for(let i=0;i<name.length;i++){ h=(h*31 + name.charCodeAt(i))%360; } return `hsl(${h} 70% 50%)`; }
     function scrollToTop(){ try{ window.scrollTo({top:0,behavior:'smooth'});}catch{ window.scrollTo(0,0);} }
@@ -2250,7 +2250,8 @@ function canonicalSubject(subject, examType){
         <b>年齡</b><div>${esc(c.age ?? '—')}</div>
         <b>性別</b><div>${esc(c.studentGender ?? '—')}</div>
         <b>就讀年級</b><div>${esc(c.grade ?? '—')}</div>
-        <b>學科</b><div>${esc((c.subjects || []).filter(Boolean).join('、') || '—')}</div>
+        <b>考試類別</b><div>${esc(normalizeExamTypeForFilter(c.examType) || '—')}</div>
+        <b>學科</b><div>${esc((c.subjects || []).filter(Boolean).map(subject => normalizeSubjectLabel(subject, c.examType)).join('、') || '—')}</div>
         <b>期望上課地區</b><div>${esc(c.district ?? '—')}｜${esc(c.areaDetail ?? '')}</div>
         <b>張貼日期</b><div>${esc(c.postedAt ?? '—')}</div>
       `;
