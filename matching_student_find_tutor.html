@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Explorer 學生尋找導師的詳細配對方法，包括發佈招聘個案及直接尋找導師兩種方式。" />
+  <title>Explorer｜配對方法：學生尋找導師</title>
+  <style>
+    :root{
+      --base:#070d14;
+      --text:#eaf4ff;
+      --muted:rgba(184,199,217,.92);
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.05);
+      --stroke:rgba(255,255,255,.12);
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --radius:18px;
+      --glassBlur:14px;
+      --max:1020px;
+      --modalBg:rgba(0,0,0,.65);
+      --accent:#6fe7ff;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:ui-sans-serif,-apple-system,"Noto Sans TC",system-ui,"PingFang TC","Heiti TC",Arial,sans-serif;
+      color:var(--text);
+      background:var(--base);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      z-index:-2;
+      background:
+        radial-gradient(1200px 800px at 12% 20%,rgba(21,76,107,.55),transparent 60%),
+        radial-gradient(900px 700px at 85% 30%,rgba(111,231,255,.18),transparent 55%),
+        radial-gradient(900px 700px at 55% 90%,rgba(21,76,107,.32),transparent 55%),
+        repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0,rgba(255,255,255,.05) 1px,transparent 1px,transparent 88px),
+        repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 1px,transparent 88px),
+        linear-gradient(180deg,var(--base),var(--base));
+      opacity:.24;
+      pointer-events:none;
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      inset:-160px;
+      z-index:-1;
+      background:
+        radial-gradient(circle at 30% 40%,rgba(111,231,255,.14),transparent 44%),
+        radial-gradient(circle at 75% 60%,rgba(21,76,107,.24),transparent 52%);
+      filter:blur(18px);
+      opacity:.95;
+      pointer-events:none;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:30;
+      backdrop-filter:blur(var(--glassBlur));
+      -webkit-backdrop-filter:blur(var(--glassBlur));
+      background:rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .topbar-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:12px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .logo{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:var(--shadow);
+      color:rgba(234,244,255,.92);
+      flex:0 0 auto;
+    }
+    .logo svg{ width:22px; height:22px; }
+    .logo svg path{ stroke:currentColor !important; }
+    .brandText{ min-width:0; line-height:1.05; }
+    .brandText .title{
+      font-weight:950;
+      letter-spacing:.12em;
+      font-size:13px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .brandText .sub{
+      margin-top:2px;
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .menuBtn,.closeBtn{
+      width:44px;
+      height:44px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(234,244,255,.92);
+      cursor:pointer;
+    }
+    .menuBtn svg,.closeBtn svg{ width:22px; height:22px; }
+    .menuBtn svg path,.closeBtn svg path{ stroke:currentColor !important; }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      z-index:40;
+      background:var(--modalBg);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .22s ease;
+    }
+    .overlay.open{ opacity:1; pointer-events:auto; }
+    .drawer{
+      position:fixed;
+      top:0;
+      right:0;
+      z-index:50;
+      width:min(92vw,360px);
+      height:100%;
+      transform:translateX(105%);
+      transition:transform .28s cubic-bezier(.2,.8,.2,1);
+      background:rgba(255,255,255,.06);
+      border-left:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      box-shadow:-18px 0 60px rgba(0,0,0,.45);
+    }
+    .drawer.open{ transform:translateX(0); }
+    .drawerInner{ height:100%; display:flex; flex-direction:column; gap:12px; padding:16px; overflow:auto; }
+    .drawerTop{ display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,.10); }
+    .drawerTitle{ color:rgba(234,244,255,.98); font-size:13px; font-weight:950; letter-spacing:.08em; }
+    .navList{ display:flex; flex-direction:column; gap:10px; padding-top:6px; }
+    .navItem{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      min-height:52px;
+      gap:10px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+      color:rgba(234,244,255,.95);
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+    .navItem:hover,.navItem[aria-current="page"]{
+      transform:translateY(-1px);
+      border-color:rgba(111,231,255,.32);
+      background:rgba(111,231,255,.08);
+    }
+    .navLeft{ display:flex; flex-direction:column; min-width:0; }
+    .navMain{ font-size:13px; font-weight:950; letter-spacing:.04em; line-height:1.35; }
+    .navArrow{
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+    }
+    .navArrow svg{ width:16px; height:16px; color:rgba(234,244,255,.92); }
+    .navArrow svg path{ stroke:currentColor !important; }
+    .drawer details > summary::-webkit-details-marker{ display:none; }
+    .drawer details[open] > summary .navArrow{ transform:rotate(90deg); }
+    .drawer details > .navItem:not(summary){
+      min-height:0;
+      margin:0;
+      padding:9px 20px 9px 34px !important;
+      border:0 !important;
+      border-radius:0 !important;
+      background:transparent !important;
+      box-shadow:none !important;
+    }
+    .drawer details > .navItem:not(summary):hover{ transform:none; background:transparent !important; opacity:.72; }
+    .drawer details > .navItem:not(summary) .navMain{ font-size:14px; font-weight:600; line-height:1.35; }
+    .drawer details > .navItem[aria-current="page"]:not(summary){ color:var(--accent); opacity:1; }
+
+    .wrap{ max-width:var(--max); margin:0 auto; padding:18px 18px 56px; }
+    .card{
+      padding:20px;
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      background:var(--card);
+      box-shadow:var(--shadow);
+    }
+    .heroGrid{ display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:16px; align-items:stretch; }
+    .h1{ margin:0; color:rgba(234,244,255,.98); font-size:28px; font-weight:950; letter-spacing:.2px; line-height:1.2; }
+    .lead{ margin:12px 0 0; color:var(--muted); line-height:1.85; }
+    .chips{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    .chip,.primaryBtn,.secondaryBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      gap:8px;
+      padding:10px 13px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      color:rgba(234,244,255,.96);
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:.02em;
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+    .chip:hover,.primaryBtn:hover,.secondaryBtn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(111,231,255,.35);
+      background:rgba(111,231,255,.10);
+    }
+    .chipDot{ width:7px; height:7px; flex:0 0 auto; border-radius:50%; background:var(--accent); box-shadow:0 0 0 4px rgba(111,231,255,.15); }
+    .sideTitle{ margin:0; font-size:14px; font-weight:950; letter-spacing:.2px; }
+    .mini{ display:grid; gap:10px; margin-top:10px; color:var(--muted); font-size:13px; line-height:1.65; }
+    .mini b{ color:rgba(234,244,255,.98); }
+
+    .section{ margin-top:18px; scroll-margin-top:84px; }
+    .optionHead{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:14px;
+      align-items:stretch;
+    }
+    .optionBadge{
+      width:64px;
+      height:auto;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(111,231,255,.32);
+      border-radius:16px;
+      background:rgba(111,231,255,.12);
+      color:rgba(234,244,255,.98);
+      font-size:22px;
+      font-weight:950;
+    }
+    #option-b{
+      margin-top:38px;
+      padding-top:30px;
+      border-top:1px solid rgba(111,231,255,.22);
+    }
+    .sectionTitle{ margin:0; font-size:24px; line-height:1.25; }
+    .text{ margin:8px 0 0; color:var(--muted); line-height:1.85; }
+    .swipeHint{ margin:14px 0 0; color:rgba(184,199,217,.78); font-size:13px; line-height:1.6; }
+
+    .stepFlow{ display:grid; gap:16px; margin-top:16px; }
+    .stepCard{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(240px,42%);
+      gap:18px;
+      align-items:start;
+      padding:16px;
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      background:var(--card2);
+      box-shadow:0 12px 42px rgba(0,0,0,.22);
+    }
+    .stepCard.noMedia{ grid-template-columns:1fr; }
+    .stepText{ min-width:0; }
+    .stepNo{
+      width:44px;
+      min-width:44px;
+      height:40px;
+      display:grid;
+      place-items:center;
+      margin-bottom:10px;
+      border:1px solid rgba(111,231,255,.24);
+      border-radius:14px;
+      background:rgba(111,231,255,.12);
+      color:rgba(234,244,255,.98);
+      font-weight:950;
+    }
+    .stepTitle{ margin:0; font-size:20px; line-height:1.35; }
+    .stepDesc{ margin:10px 0 0; color:var(--muted); line-height:1.85; }
+    .stepDesc + .stepDesc{ margin-top:8px; }
+    .stepLink{ color:rgba(234,244,255,.98); text-underline-offset:4px; overflow-wrap:anywhere; }
+    .stepMedia{
+      margin:0;
+      align-self:stretch;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+    }
+    .stepMedia img{
+      display:block;
+      width:100%;
+      height:100%;
+      min-height:220px;
+      max-height:360px;
+      object-fit:contain;
+      background:rgba(3,9,16,.34);
+    }
+
+    .advantages{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    .advantageCard{ padding:18px; }
+    .advantageTitle{ margin:0; font-size:19px; line-height:1.35; }
+    .advantageList{ margin:12px 0 0; padding-left:21px; color:var(--muted); line-height:1.8; }
+    .advantageList li + li{ margin-top:7px; }
+
+    .finalCard{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      margin-top:18px;
+      border-color:rgba(111,231,255,.22);
+      background:rgba(111,231,255,.08);
+    }
+    .finalCard h2{ margin:0; font-size:22px; }
+    .finalCard p{ margin:8px 0 0; color:var(--muted); line-height:1.75; }
+    .finalActions{ display:flex; flex:0 0 auto; flex-wrap:wrap; justify-content:flex-end; gap:10px; }
+    .primaryBtn{ border-color:rgba(111,231,255,.38); background:rgba(111,231,255,.14); }
+    .reveal{ opacity:0; transform:translateY(10px); transition:opacity .6s ease,transform .6s ease; }
+    .reveal.in{ opacity:1; transform:translateY(0); }
+
+    @media (max-width:760px){
+      .wrap{ padding:14px 14px 52px; }
+      .topbar-inner{ padding:10px 14px; }
+      .h1{ font-size:22px; }
+      .brandText .sub{ max-width:210px; }
+      .heroGrid,.advantages{ grid-template-columns:1fr; }
+      .card{ padding:16px; }
+      .chips{ flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; scrollbar-width:thin; }
+      .chip{ flex:0 0 auto; white-space:nowrap; }
+      .sectionTitle{ font-size:21px; }
+      #option-b{ margin-top:30px; padding-top:24px; }
+      .stepFlow{
+        display:flex;
+        gap:12px;
+        overflow-x:auto;
+        padding:2px 2px 12px;
+        scroll-snap-type:x mandatory;
+        scroll-padding-inline:2px;
+        overscroll-behavior-inline:contain;
+        -webkit-overflow-scrolling:touch;
+      }
+      .stepCard{
+        display:flex;
+        flex:0 0 min(88vw,420px);
+        flex-direction:column;
+        padding:14px;
+        scroll-snap-align:start;
+        scroll-snap-stop:always;
+      }
+      .stepMedia{ width:100%; order:-1; }
+      .stepMedia img{ min-height:220px; max-height:310px; }
+      .stepTitle{ font-size:18px; }
+      .finalCard{ flex-direction:column; align-items:flex-start; }
+      .finalActions{ width:100%; display:grid; grid-template-columns:1fr; }
+      .primaryBtn,.secondaryBtn{ width:100%; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html{ scroll-behavior:auto; }
+      *,*::before,*::after{ scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M3.5 11.5 21 3.5l-8 17-2.5-6-7-3Z" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M21 3.5 10.5 14.5" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brandText">
+          <div class="title">EXPLORER</div>
+          <div class="sub">配對方法：學生尋找導師</div>
+        </div>
+      </div>
+      <button class="menuBtn" id="menuBtn" type="button" aria-label="開啟導航列" aria-controls="drawer" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 7h14" stroke-width="2" stroke-linecap="round"/>
+          <path d="M5 12h14" stroke-width="2" stroke-linecap="round"/>
+          <path d="M5 17h14" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <nav class="drawer" id="drawer" aria-label="導航列" aria-hidden="true">
+    <div class="drawerInner">
+      <div class="drawerTop">
+        <div class="drawerTitle">導航</div>
+        <button class="closeBtn" id="closeBtn" type="button" aria-label="關閉導航列">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12" stroke-width="2" stroke-linecap="round"/>
+            <path d="M18 6L6 18" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="navList">
+        <a class="navItem" href="/index.html"><span class="navLeft"><span class="navMain">主頁</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <details open>
+          <summary class="navItem" style="list-style:none;cursor:pointer"><span class="navLeft"><span class="navMain">配對方法</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></summary>
+          <a class="navItem" href="/method.html"><span class="navLeft"><span class="navMain">配對方法概覽</span></span></a>
+          <a class="navItem" href="/matching_tutor_find_student.html"><span class="navLeft"><span class="navMain">詳細配對方法：導師尋找學生</span></span></a>
+          <a class="navItem" href="/matching_student_find_tutor.html" aria-current="page"><span class="navLeft"><span class="navMain">詳細配對方法：學生尋找導師</span></span></a>
+        </details>
+        <a class="navItem" href="/fees.html"><span class="navLeft"><span class="navMain">收費及付款詳情</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/contact.html"><span class="navLeft"><span class="navMain">聯絡我們</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/terms.html"><span class="navLeft"><span class="navMain">使用條款</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+        <a class="navItem" href="/about_us.html"><span class="navLeft"><span class="navMain">關於我們</span></span><span class="navArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap" role="main">
+    <section class="heroGrid">
+      <article class="reveal card">
+        <h1 class="h1">配對方法：學生尋找導師</h1>
+        <p class="lead">你可以發佈招聘個案，等候合適導師主動申請；亦可以直接瀏覽平台上的導師，向心儀人選提出申請。兩種方法亦可同時使用。</p>
+        <div class="chips" aria-label="頁內快速導覽">
+          <a class="chip" href="#option-a"><span class="chipDot" aria-hidden="true"></span>方法 A：發佈招聘個案</a>
+          <a class="chip" href="#option-b"><span class="chipDot" aria-hidden="true"></span>方法 B：直接尋找導師</a>
+          <a class="chip" href="#advantages"><span class="chipDot" aria-hidden="true"></span>比較兩種方法</a>
+          <a class="chip" href="/method.html"><span class="chipDot" aria-hidden="true"></span>返回配對方法</a>
+        </div>
+      </article>
+
+      <aside class="reveal card" aria-label="重點摘要">
+        <h2 class="sideTitle">重點摘要</h2>
+        <div class="mini">
+          <div>• <b>方法 A</b>：完整發佈你的需求，讓更多合適導師主動申請。</div>
+          <div>• <b>方法 B</b>：直接選擇心儀導師，方便快捷，毋須先發佈個案。</div>
+          <div>• <b>可以同時使用</b>：增加接觸合適導師或教練的機會。</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal" id="option-a" aria-labelledby="option-a-title">
+      <div class="optionHead">
+        <div class="optionBadge" aria-hidden="true">A</div>
+        <div>
+          <h2 class="sectionTitle" id="option-a-title">發佈招聘個案</h2>
+          <p class="text">填寫表格後，你的招聘個案將會發佈在平台網站上。合適的導師查看過後會向你提出申請。</p>
+        </div>
+      </div>
+      <p class="swipeHint">共 4 步；手機版可左右滑動查看每個步驟的圖片與說明。</p>
+
+      <div class="stepFlow">
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">A1</div>
+            <h3 class="stepTitle">發佈招聘個案</h3>
+            <p class="stepDesc">前往 <a class="stepLink" href="https://forms.gle/A5W8koTqT4t7BvgV7" target="_blank" rel="noopener">招聘個案申請表格</a>，填寫並提交所需資料以發佈招聘個案。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/student_find_tutor_A1.jpeg" alt="發佈招聘個案申請表格畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">A2</div>
+            <h3 class="stepTitle">招聘個案展示在平台上</h3>
+            <p class="stepDesc">你填寫好的招聘個案會被製作成資料卡，展示在平台中相應分類的「尋找招聘個案」面板內。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/student_find_tutor_A2.jpeg" alt="招聘個案在平台展示的畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">A3</div>
+            <h3 class="stepTitle">等待導師申請並商討課程細節</h3>
+            <p class="stepDesc">導師可在「尋找招聘個案」中找到你的資料卡，合適的導師會經平台向你提出申請。如果想加快找到導師或教練，我們亦建議你同時採用方法 B。</p>
+            <p class="stepDesc">當導師或教練有意申請時，平台會安排雙方聯絡並商討課程細節，包括上課時間及薪酬等。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/student_find_tutor_A3.png" alt="導師申請招聘個案及安排聯絡的畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard noMedia">
+          <div class="stepText">
+            <div class="stepNo">A4</div>
+            <h3 class="stepTitle">完成！</h3>
+            <p class="stepDesc">當課程細節商討完結並雙方達成協議後，整個配對流程便告完成。學生或學生家長會先支付首兩節課的學費給平台作為中介費用；隨後課堂的學費將全數由導師或教練（或其指定收款人）安排收取。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="option-b" aria-labelledby="option-b-title">
+      <div class="optionHead">
+        <div class="optionBadge" aria-hidden="true">B</div>
+        <div>
+          <h2 class="sectionTitle" id="option-b-title">直接開始尋找導師</h2>
+          <p class="text">在「尋找導師」選擇合適人選，我們會把你的個案傳送給指定導師或教練。</p>
+        </div>
+      </div>
+      <p class="swipeHint">共 4 步；手機版可左右滑動查看每個步驟的圖片與說明。</p>
+
+      <div class="stepFlow">
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">B1</div>
+            <h3 class="stepTitle">瀏覽各分類的「尋找導師」頁面</h3>
+            <p class="stepDesc">無論你是否已發佈招聘個案，都可以直接在平台各分類的「尋找導師」頁面尋找合適的導師。按下導師資料卡即可查看更多資料，並開始申請。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/student_find_tutor_B1.jpeg" alt="瀏覽尋找導師分類頁面的畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">B2</div>
+            <h3 class="stepTitle">向指定導師提出申請</h3>
+            <p class="stepDesc">你可以在導師的資料卡內按下「立即申請」鍵，申請成為該導師或教練的學生。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/student_find_tutor_B2.jpeg" alt="在導師資料卡按下立即申請的畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard">
+          <div class="stepText">
+            <div class="stepNo">B3</div>
+            <h3 class="stepTitle">提交表格並商討課程細節</h3>
+            <p class="stepDesc">填妥並提交「立即申請」表格後，我們會把你的資料傳送給你所指定的導師或教練查閱。</p>
+            <p class="stepDesc"><strong>請注意：</strong>如果你已經發佈招聘個案，我們會把完整個案提交給指定導師或教練；如果尚未發佈，我們則會傳送你在申請表格中填寫的簡略資料。</p>
+            <p class="stepDesc">當指定導師或教練有意接受申請時，平台會安排雙方聯絡並商討課程細節，包括上課時間及薪酬等。</p>
+          </div>
+          <figure class="stepMedia"><img src="/assets/img/student_find_tutor_B3.jpeg" alt="填妥申請表格及安排聯絡的畫面" loading="lazy" decoding="async"></figure>
+        </article>
+
+        <article class="stepCard noMedia">
+          <div class="stepText">
+            <div class="stepNo">B4</div>
+            <h3 class="stepTitle">完成！</h3>
+            <p class="stepDesc">當課程細節商討完結並雙方達成協議後，整個配對流程便告完成。學生或學生家長會先支付首兩節課的學費給平台作為中介費用；隨後課堂的學費將全數由導師或教練（或其指定收款人）安排收取。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="advantages reveal" id="advantages" aria-label="兩種方法的優點">
+      <article class="advantageCard card">
+        <h2 class="advantageTitle">方法 A 優點 🌟</h2>
+        <ul class="advantageList">
+          <li>張貼的招聘個案會比方法 B 更詳實，有更大機會找到符合要求的導師。</li>
+          <li>能吸引更多可能合適的導師或教練申請，讓你有更多選擇。</li>
+        </ul>
+      </article>
+      <article class="advantageCard card">
+        <h2 class="advantageTitle">方法 B 優點 🌟</h2>
+        <ul class="advantageList">
+          <li>申請表格比發佈完整招聘個案簡略，方便省時，毋須登記。</li>
+          <li>能確保你感興趣的導師或教練收到並查看你的個案。</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="finalCard card reveal" aria-label="立即開始尋找導師">
+      <div>
+        <h2>完成</h2>
+        <p>選擇最適合你的方法，立即開始配對；你亦可以同時使用兩種方法以增加成功機會。</p>
+      </div>
+      <div class="finalActions">
+        <a class="primaryBtn" href="https://forms.gle/vz3tYwG51vKJkgfh6" target="_blank" rel="noopener">立即發佈招聘個案</a>
+        <a class="secondaryBtn" href="/index.html">立即尋找導師</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const items = Array.from(document.querySelectorAll('.reveal'));
+      if('IntersectionObserver' in window){
+        const io = new IntersectionObserver((entries)=>{
+          entries.forEach((entry)=>{
+            if(entry.isIntersecting){
+              entry.target.classList.add('in');
+              io.unobserve(entry.target);
+            }
+          });
+        },{ threshold:.12,rootMargin:"0px 0px -8% 0px" });
+
+        items.forEach((item,index)=>{
+          item.style.transitionDelay = (Math.min(index,6) * 70) + "ms";
+          io.observe(item);
+        });
+      }else{
+        items.forEach((item)=>item.classList.add('in'));
+      }
+
+      const menuBtn = document.getElementById('menuBtn');
+      const drawer = document.getElementById('drawer');
+      const overlay = document.getElementById('overlay');
+      const closeBtn = document.getElementById('closeBtn');
+      if(!menuBtn || !drawer || !overlay || !closeBtn) return;
+
+      function openNav(){
+        drawer.classList.add('open');
+        overlay.classList.add('open');
+        drawer.setAttribute('aria-hidden','false');
+        overlay.setAttribute('aria-hidden','false');
+        menuBtn.setAttribute('aria-expanded','true');
+        closeBtn.focus();
+      }
+      function closeNav(){
+        drawer.classList.remove('open');
+        overlay.classList.remove('open');
+        drawer.setAttribute('aria-hidden','true');
+        overlay.setAttribute('aria-hidden','true');
+        menuBtn.setAttribute('aria-expanded','false');
+      }
+
+      menuBtn.addEventListener('click',()=>drawer.classList.contains('open') ? closeNav() : openNav());
+      closeBtn.addEventListener('click',closeNav);
+      overlay.addEventListener('click',closeNav);
+      document.addEventListener('keydown',(event)=>{
+        if(event.key === 'Escape' && drawer.classList.contains('open')){
+          closeNav();
+          menuBtn.focus();
+        }
+      });
+      drawer.addEventListener('click',(event)=>{
+        if(event.target.closest('a')) closeNav();
+      });
+    })();
+  </script>
+</body>
+</html>
