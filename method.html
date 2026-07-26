@@ -164,7 +164,7 @@
       box-shadow: var(--shadow); padding:20px;
     }
     .hero{ display:grid; gap:16px; }
-    .heroGrid{ display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:16px; align-items:start; }
+    .heroGrid{ display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:16px; align-items:stretch; }
     .h1{ margin:0; font-size:30px; letter-spacing:.01em; }
     .lead{ margin:10px 0 0; color:var(--muted); line-height:1.8; }
 
@@ -242,10 +242,57 @@
     }
     .detailArrow svg path{ stroke:currentColor !important; }
 
-    .faqList{ display:grid; gap:12px; }
-    .faqItem{ border:1px solid rgba(255,255,255,.12); border-radius:14px; background:rgba(255,255,255,.05); padding:14px; }
-    .faqQ{ margin:0; font-size:15px; font-weight:900; }
-    .faqA{ margin:8px 0 0; color:var(--muted); line-height:1.75; }
+    .faqList{
+      margin-top:12px;
+      display:grid;
+      gap:10px;
+    }
+    details.faqItem{
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:var(--radius);
+      background:rgba(255,255,255,.05);
+    }
+    details.faqItem summary{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px;
+      color:rgba(234,244,255,.98);
+      font-weight:950;
+      list-style:none;
+      cursor:pointer;
+    }
+    details.faqItem summary::-webkit-details-marker{ display:none; }
+    .faqQ{
+      min-width:0;
+      font-size:13px;
+      line-height:1.55;
+      letter-spacing:.02em;
+    }
+    .faqChev{
+      width:28px;
+      height:28px;
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+      margin-top:1px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      transition:transform .16s ease;
+    }
+    details[open] .faqChev{ transform:rotate(180deg); }
+    .faqChev svg{ width:16px; height:16px; color:rgba(234,244,255,.92); }
+    .faqChev svg path{ stroke:currentColor !important; }
+    .faqA{
+      padding:0 14px 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.75;
+    }
+    .faqA b{ color:rgba(234,244,255,.98); }
 
     @media (max-width: 720px){
       .wrap{ padding:14px 14px 52px; }
@@ -348,7 +395,7 @@
      <div class="heroGrid">
         <article class="reveal card">
           <h1 class="h1">配對方法</h1>
-          <p class="lead">快速了解 Explorer 的整體配對邏輯，並依你身份查看詳細流程。</p>
+          <p class="lead">學生可發佈招聘個案或直接申請指定導師；導師完成登記後可瀏覽並申請合適個案。雙方有意後，平台會安排聯絡及商討課程細節。</p>
           <div class="chips" aria-label="頁內快速導覽">
             <a class="chip" href="#overview"><span class="chipDot" aria-hidden="true"></span>配對流程概覽</a>
             <a class="chip" href="#detail-flow"><span class="chipDot" aria-hidden="true"></span>詳細配對流程</a>
@@ -362,16 +409,16 @@
         <aside class="sideCard card reveal" id="summary" aria-label="重點摘要">
           <h2 class="sideTitle">重點摘要</h2>
           <div class="mini">
-            <div>• <b>先看概覽圖</b>：可快速掌握由提交需求到正式上課的完整路徑。</div>
-            <div>• <b>學生流程</b>：提交需求後，平台會按條件推薦合適導師並協調首課安排。</div>
-            <div>• <b>導師流程</b>：完善資料並申請個案後，平台會協助對接與確認配對結果。</div>
+            <div>• <b>學生有兩種方法</b>：發佈招聘個案，或直接向指定導師提出申請；兩者可同時使用。</div>
+            <div>• <b>導師先完成登記</b>：取得導師編號後，便可瀏覽及申請招聘個案。</div>
+            <div>• <b>雙方有意才安排聯絡</b>：商討時間及薪酬並達成協議後，配對才告完成。</div>
           </div>
         </aside>
       </div>
 
       <article class="reveal" id="overview" aria-label="配對流程概覽">
         <h2 class="sectionTitle">配對流程概覽</h2>
-        <p class="text">以下流程圖顯示由提交需求、配對、確認安排到正式上課的主要步驟。建議先看全圖，再閱讀下面兩個角色的詳細說明。</p>
+        <p class="text">以下流程圖展示導師登記、學生提出需求、雙方申請及確認、平台安排聯絡，以及成功配對後的付款安排。學生可選擇發佈招聘個案或直接申請導師；導師則可在完成登記後主動申請合適個案。</p>
         <img class="flowImg" src="/assets/img/flow.png" alt="配對流程概覽圖" loading="lazy" decoding="async">
       </article>
 
@@ -393,38 +440,85 @@
       <article class="reveal" id="student-flow" aria-label="學生尋找導師流程">
         <h2 class="sectionTitle">學生尋找導師流程</h2>
         <ol class="list">
-          <li>提交學習需求（科目、程度、時間、地區／網課）。</li>
-          <li>平台按條件篩選及推薦合適導師。</li>
-          <li>確認試堂／首課安排與課堂細節。</li>
-          <li>開始上課，並按實際情況調整學習計劃。</li>
+          <li>選擇發佈完整招聘個案，等待合適導師申請；或直接在「尋找導師」中向指定導師提出申請。兩種方法可同時使用。</li>
+          <li>如發佈招聘個案，平台會把資料製作成資料卡並展示於相應的「尋找招聘個案」分類；如直接申請，平台會把你提交的個案資料傳送給指定導師。</li>
+          <li>當導師或教練有意接受或申請你的個案時，平台會安排雙方聯絡，商討上課時間、薪酬及其他課程細節。</li>
+          <li>雙方達成協議後完成配對。學生或家長先向平台支付首兩堂學費作為平台服務費，其後學費由導師或教練安排收取。</li>
         </ol>
       </article>
 
       <article class="reveal" id="tutor-flow" aria-label="導師尋找學生流程">
         <h2 class="sectionTitle">導師尋找學生流程</h2>
         <ol class="list">
-          <li>註冊並完善導師資料（專長、經驗、可上課時段）。</li>
-          <li>查看並申請適合自己的教學個案。</li>
-          <li>平台協調雙方需求並確認配對結果。</li>
-          <li>完成首課後持續跟進，建立穩定教學安排。</li>
+          <li>填寫導師登記表格，完成登記後透過電郵取得導師編號。</li>
+          <li>在已登記項目的「尋找招聘個案」分類中瀏覽資料卡，查看並選擇適合自己的個案。</li>
+          <li>在個案資料卡按下「立即申請」，填妥表格後，平台會把你的導師資料傳送給相關學生或家長查閱。</li>
+          <li>學生或家長有意接受申請時，平台會安排雙方聯絡及商討課程細節；雙方達成協議後完成配對。</li>
         </ol>
       </article>
 
       <article class="reveal card" id="faq" aria-label="常見問題">
         <h2 class="sectionTitle">常見問題（FAQ）</h2>
         <div class="faqList">
-          <div class="faqItem">
-            <h3 class="faqQ">配對一般要等幾耐？</h3>
-            <p class="faqA">視乎科目、時段及地區而定，通常提交完整需求後，平台會盡快安排合適人選並回覆配對進度。</p>
-          </div>
-          <div class="faqItem">
-            <h3 class="faqQ">如果首課後覺得不太合適可以點做？</h3>
-            <p class="faqA">可以向平台反映實際情況，我們會按雙方需要再作協調，協助你調整安排或尋找更合適的配對。</p>
-          </div>
-          <div class="faqItem">
-            <h3 class="faqQ">可唔可以只安排網課？</h3>
-            <p class="faqA">可以。提交需求時註明網課即可，平台會優先篩選可提供線上教學的導師。</p>
-          </div>
+          <details class="faqItem">
+            <summary>
+              <div class="faqQ">學生或家長可以用甚麼方法尋找導師？</div>
+              <div class="faqChev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </summary>
+            <div class="faqA">
+              可以選擇<b>發佈招聘個案</b>，讓合適的導師主動申請；亦可直接瀏覽「尋找導師」，向指定導師或教練提出申請。兩種方法可以同時使用。
+            </div>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <div class="faqQ">是否一定要先發佈招聘個案，才可申請指定導師？</div>
+              <div class="faqChev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </summary>
+            <div class="faqA">
+              不需要。你可以直接填寫指定導師資料卡內的「立即申請」表格。若你已發佈招聘個案，平台會把完整個案傳送給指定導師；否則會傳送申請表格內的簡略資料。
+            </div>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <div class="faqQ">導師如何開始申請招聘個案？</div>
+              <div class="faqChev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </summary>
+            <div class="faqA">
+              導師或教練須先完成登記並取得<b>導師編號</b>，其後可在所屬分類的「尋找招聘個案」中查看資料卡，按「立即申請」並提交表格。
+            </div>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <div class="faqQ">平台會在甚麼時候安排雙方聯絡？</div>
+              <div class="faqChev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </summary>
+            <div class="faqA">
+              當收到申請的一方有意接受配對時，平台會安排學生或家長與導師聯絡，讓雙方商討上課時間、薪酬及其他課程細節。
+            </div>
+          </details>
+
+          <details class="faqItem">
+            <summary>
+              <div class="faqQ">成功配對後，學費如何安排？</div>
+              <div class="faqChev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </summary>
+            <div class="faqA">
+              雙方達成課程協議後，學生或家長會先向平台支付<b>首兩堂學費</b>作為平台服務費；其後課堂的學費則由導師或教練（或其指定收款人）安排收取。更多資料可參閱「收費及付款詳情」。
+            </div>
+          </details>
         </div>
       </article>
     </section>
