@@ -247,11 +247,11 @@
       display:grid;
       grid-template-columns:auto minmax(0,1fr);
       gap:14px;
-      align-items:start;
+      align-items:stretch;
     }
     .optionBadge{
-      width:48px;
-      height:48px;
+      width:64px;
+      height:auto;
       display:grid;
       place-items:center;
       border:1px solid rgba(111,231,255,.32);
@@ -260,6 +260,11 @@
       color:rgba(234,244,255,.98);
       font-size:22px;
       font-weight:950;
+    }
+    #option-b{
+      margin-top:38px;
+      padding-top:30px;
+      border-top:1px solid rgba(111,231,255,.22);
     }
     .sectionTitle{ margin:0; font-size:24px; line-height:1.25; }
     .text{ margin:8px 0 0; color:var(--muted); line-height:1.85; }
@@ -351,6 +356,7 @@
       .chips{ flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; scrollbar-width:thin; }
       .chip{ flex:0 0 auto; white-space:nowrap; }
       .sectionTitle{ font-size:21px; }
+      #option-b{ margin-top:30px; padding-top:24px; }
       .stepFlow{
         display:flex;
         gap:12px;
@@ -515,7 +521,7 @@
         <div class="optionBadge" aria-hidden="true">B</div>
         <div>
           <h2 class="sectionTitle" id="option-b-title">直接開始尋找導師</h2>
-          <p class="text">直接在「尋找導師」中選擇適合你的導師或教練，我們會把你的個案資料傳送給你所指定的導師或教練。</p>
+          <p class="text">在「尋找導師」選擇合適人選，我們會把你的個案傳送給指定導師或教練。</p>
         </div>
       </div>
       <p class="swipeHint">共 4 步；手機版可左右滑動查看每個步驟的圖片與說明。</p>
