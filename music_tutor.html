@@ -1709,6 +1709,29 @@
         timeSlots:"二四晚間；週末彈性",
         teachingLanguage:["廣東話","普通話"],
         notes:"提供練習錄音回饋，協助調整拉奏姿勢"
+      },
+      {
+        id:"MU97509",
+        name:"Chris",
+        gender:"男導師",
+        age:"28 歲",
+        intro:"香港教育大學音樂教育系畢業，擁有逾10年教育經驗，學生年齡涵蓋3歲至94歲。教學不拘泥於傳統音樂教育方法，透過認真而有趣的教學模式，帶領學生感受音樂的樂趣，並從中掌握基礎音樂概念。",
+        years:"逾10年",
+        mainCategory:["鋼琴","皇家五級樂理","皇家八級樂理","其他樂理考試"],
+        subjects:["鋼琴技巧","鋼琴伴奏","基礎樂理","皇家音樂學院樂理考試"],
+        district:["荃灣區","屯門區","元朗區","葵青區","離島區"],
+        areaDetail:"現誠意招收東涌至東涌北的學生，可提供上門教學；試堂地址位於海堤灣畔。",
+        fee:500,
+        feeDisplay:"初級 $250／30分鐘",
+        mode:"面授",
+        targetLevels:["幼兒（3–6 歲）","兒童（6–12 歲）","青少年（13–17 歲）","成人","長者"],
+        examType:["鋼琴","皇家五級樂理","皇家八級樂理","其他樂理考試"],
+        experience:"擁有逾10年音樂教育經驗，學生年齡由3歲至94歲不等。教學方式認真而有趣，不會單純依循傳統音樂教育方法，重視培養學生對音樂的興趣，並協助學生掌握扎實的基礎音樂概念。",
+        qualification:"香港教育大學音樂教育榮譽學士（當代音樂及演奏教學法）",
+        verified:false,
+        timeSlots:"星期二至星期日",
+        teachingLanguage:["廣東話"],
+        notes:"專業範圍包括鋼琴、鋼琴伴奏及樂理。初級課堂收費為港幣$250／30分鐘。"
       }
     ];
 
@@ -1717,6 +1740,10 @@
       return String(str ?? "").replace(/[&<>"'`=\/]/g, s => ({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'
       }[s]));
+    }
+    function listText(value){
+      if(Array.isArray(value)) return value.filter(Boolean).join("、");
+      return String(value ?? "");
     }
     function colorFromName(name){ let h=0; for(let i=0;i<name.length;i++){ h=(h*31 + name.charCodeAt(i))%360; } return `hsl(${h} 70% 50%)`; }
     function scrollToTop(){ try{ window.scrollTo({top:0,behavior:'smooth'});}catch{ window.scrollTo(0,0);} }
@@ -1976,7 +2003,8 @@
     function passesDistrict(c){
       const d = districtSel.value;
       if(!d) return true;
-      return c.district === d;
+      const districts = Array.isArray(c.district) ? c.district : [c.district];
+      return districts.includes(d);
     }
 
     function passesGender(c){
@@ -1989,7 +2017,7 @@
       if(categorySelected.size === 0) return true;
       const subjList = [
         ...(c.subjects || []),
-        c.mainCategory || ''
+        ...(Array.isArray(c.mainCategory) ? c.mainCategory : [c.mainCategory || ''])
       ].map(s => String(s).toLowerCase());
       for(const sel of categorySelected){
         const needle = String(sel).toLowerCase();
@@ -2007,8 +2035,8 @@
         c.district, c.areaDetail, c.mode,
         ...(c.targetLevels||[]),
         ...(c.examType||[]),
-        c.experience, c.qualification, c.timeSlots, ...(c.teachingLanguages||[]), c.notes,
-        (c.fee ?? "") + ""
+        c.experience, c.qualification, c.timeSlots, ...(c.teachingLanguage||[]), c.notes,
+        c.feeDisplay, (c.fee ?? "") + ""
       ].join(' ').toLowerCase();
       return hay.includes(k);
     }
@@ -2092,19 +2120,19 @@
                   : initials}
               </div>
               <div class="who">
-                <div class="name">${esc(c.name)} <small class="gender">${esc(c.gender || '')}</small>${c.qualification ? `<span class="verified-badge" title="平台已核實此導師的資歷" aria-label="資歷已認證"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="m4.7 8.1 2.05 2.05 4.55-4.6" stroke="#052e2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>資歷已認證</span>` : ''}</div>
+                <div class="name">${esc(c.name)} <small class="gender">${esc(c.gender || '')}</small>${c.qualification && c.verified !== false ? `<span class="verified-badge" title="平台已核實此導師的資歷" aria-label="資歷已認證"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor"/><path d="m4.7 8.1 2.05 2.05 4.55-4.6" stroke="#052e2b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>資歷已認證</span>` : ''}</div>
                 <div class="muted">導師編號：${esc(c.id || '-') }</div>
               </div>
             </div>
 
             <div class="row">
               <svg class="music-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5h18v14H3V5Zm4.5 0v9m4.5-9v9m4.5-9v9M3 14h18" stroke="var(--accent)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 5h3v6H6V5Zm5 0h3v6h-3V5Zm5 0h3v6h-3V5Z" fill="var(--accent)" stroke="none"/></svg>
-              <span>${esc(c.mainCategory || '—')}</span>
+              <span>${esc(listText(c.mainCategory) || '—')}</span>
             </div>
 
             <div class="row">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20s8-4.5 8-11a8 8 0 1 0-16 0c0 6.5 8 11 8 11Z" stroke="#3b82f6" stroke-width="1.4"/><circle cx="12" cy="9" r="2" fill="#3b82f6"/></svg>
-              <span>${esc(c.district || '—')}</span>
+              <span>${esc(listText(c.district) || '—')}</span>
             </div>
 
             <div class="row">
@@ -2124,7 +2152,7 @@
 
             <div class="foot">
               <span>點擊查看完整導師資料</span>
-              <span class="budget">${(c.fee || c.fee===0) ? `HK$ ${esc(c.fee)}/小時` : '面議'}</span>
+              <span class="budget">${c.feeDisplay ? esc(c.feeDisplay) : ((c.fee || c.fee===0) ? `HK$ ${esc(c.fee)}/小時` : '面議')}</span>
             </div>
           `;
           card.addEventListener('click', ()=> openProfile(c));
@@ -2165,13 +2193,13 @@
       kvBasic.innerHTML = `
         <b>導師年齡</b><div>${esc(c.age ?? '—')}</div>
         <b>導師性別</b><div>${esc(c.gender ?? '—')}</div>
-        <b>音樂種類</b><div>${esc(c.mainCategory ?? '—')}</div>
+        <b>音樂種類</b><div>${esc(listText(c.mainCategory) || '—')}</div>
         <b>課程簡介</b><div>${esc(c.intro ?? '—')}</div>
-        <b>服務地區</b><div>${esc(c.district ?? '—')}｜${esc(c.areaDetail ?? '')}</div>
+        <b>服務地區</b><div>${esc(listText(c.district) || '—')}｜${esc(c.areaDetail ?? '')}</div>
         <b>授課模式</b><div>${esc(c.mode ?? '—')}</div>
       `;
       kvExpect.innerHTML = `
-        <b>時薪</b><div>HK$ ${esc(c.fee ?? '—')} / 小時</div>
+        <b>收費</b><div>${c.feeDisplay ? esc(c.feeDisplay) : `HK$ ${esc(c.fee ?? '—')} / 小時`}</div>
         <b>對象</b><div>${esc((c.targetLevels||[]).join('、') || '—')}</div>
         <b>教學重點</b><div>${esc((c.examType||[]).join('、') || '—')}</div>
         <b>教學經驗</b><div>${esc(c.experience ?? '—')}</div>
@@ -2181,7 +2209,7 @@
       `;
       kvNotes.textContent = c.notes || '—';
 
-      copyIdBtn.textContent = '複製教練編號';
+      copyIdBtn.textContent = '複製導師編號';
 
       backdrop.classList.add('show');
       backdrop.setAttribute('aria-hidden','false');
