@@ -1674,6 +1674,25 @@
         timeSlots:"平日晚間；週末部分時間",
         teachingLanguages:["廣東話","英文","普通話"],
         notes:"重視口語及實際應用，會設計模擬考試情境"
+      },
+      {
+        id:"AC40366",
+        name:"Yoana",
+        gender:"女導師",
+        years:"少於1年",
+        mainCategory:"小學英文、小學數學、初中數學",
+        subjects:["DSE 數學（必修部分）","英文"],
+        district:"大埔區",
+        areaDetail:"",
+        fee:120,
+        mode:"面授",
+        targetLevels:["小學","初中","香港中學文憑試 DSE"],
+        examType:["香港中學文憑試 DSE"],
+        experience:"少於1年",
+        qualification:"畢業於大埔Band 1英文中學，2026年DSE考生",
+        timeSlots:"平日下午",
+        teachingLanguages:["廣東話"],
+        notes:"可教授小學數學及中學英文數學。學生可透過WhatsApp隨時問書，導師亦可提供練習和試卷，並會提早協助學生預習課堂內容。"
       }
     ];
 
@@ -2156,7 +2175,7 @@
         <b>教學年資</b><div>${esc(c.years ?? '—')}</div>
         <b>導師性別</b><div>${esc(c.gender ?? '—')}</div>
         <b>教學類別 / 科目</b><div>${esc(c.mainCategory ?? '—')}｜${esc((c.subjects||[]).join('、') || '—')}</div>
-        <b>服務地區</b><div>${esc(c.district ?? '—')}｜${esc(c.areaDetail ?? '')}</div>
+        <b>服務地區</b><div>${esc(c.district ?? '—')}${c.areaDetail ? `｜${esc(c.areaDetail)}` : ''}</div>
         <b>授課模式</b><div>${esc(c.mode ?? '—')}</div>
       `;
       kvExpect.innerHTML = `
