@@ -7,6 +7,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="format-detection" content="telephone=no" />
   <title>Explorer｜聯絡我們</title>
 
   <style>
@@ -570,7 +571,18 @@
       margin-top: -2px;
     }
 
-#socialText{ color:#fff; }
+    #waText{
+      color:inherit;
+      -webkit-text-fill-color:currentColor;
+      text-decoration:none;
+    }
+    #waText a{
+      color:inherit !important;
+      -webkit-text-fill-color:currentColor;
+      text-decoration:none !important;
+      pointer-events:none;
+    }
+    #socialText{ color:#fff; }
 
 
     .actions{
