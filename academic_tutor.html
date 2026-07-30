@@ -1700,6 +1700,39 @@
         timeSlots:"平日下午",
         teachingLanguages:["廣東話"],
         notes:"可教授小學數學及中學英文數學。學生可透過WhatsApp隨時問書，導師亦可提供練習和試卷，並會提早協助學生預習課堂內容。"
+      },
+      {
+        id:"AC33957",
+        name:"Wing",
+        gender:"男導師",
+        years:"1–2 年",
+        mainCategory:"學術 Academic",
+        subjects:[
+          "DSE：中文、數學（必修部分）、企業，會計，與財務概論、中史",
+          "小學：中文、數學、普通話、寫作、閱讀理解",
+          "初中：中文、數學、初中中史、普通話"
+        ],
+        cardSubjects:["中文","數學","企業，會計，與財務概論","中史","普通話"],
+        profileSubjectsMultiline:true,
+        subjectsByExamType:{
+          DSE:["中文","數學（必修部分）","企業，會計，與財務概論","中史"],
+          小學:["中文","數學","普通話","寫作","閱讀理解"],
+          初中:["中文","數學","初中中史","普通話"]
+        },
+        district:"網上授課",
+        areaDetail:"",
+        fee:150,
+        feeMax:250,
+        feeDisplay:"HK$ 150–250/小時",
+        mode:"網上 Online",
+        targetLevels:["小學","初中","香港中學文憑試 DSE"],
+        examType:["香港中學文憑試 DSE"],
+        experience:"1–2 年",
+        qualification:"香港中文大學中國語言及文學系在讀。2025 DSE 中文閱讀及寫作均取得 5**，數學取得 5。中文總分為 74%，高於約 71% 的 5** cutoff；中文校內 SBA 滿分，調整後得分為 91/100。",
+        verified:false,
+        timeSlots:"星期一至日",
+        teachingLanguages:["廣東話","普通話"],
+        notes:"提供24小時問書、無限作文批改、溫習筆記及練習習題。中文方面已有一年補習經驗，學生包括 Band 1 至 Band 2，具備補底及拔尖教學經驗，教授內容包括十二篇指定篇章、閱讀理解及寫作。數學方面對相關知識有清晰理解，並曾於數學專科補習社工作，具備將概念清楚教授予學生的經驗。"
       }
     ];
 
@@ -1955,15 +1988,18 @@
     });
 
     function passesFee(c){
-      const fee = Number(c.fee ?? 0);
+      const firstFee = Number(c.fee ?? 0);
+      const secondFee = Number(c.feeMax ?? firstFee);
+      const feeLow = Math.min(firstFee, secondFee);
+      const feeHigh = Math.max(firstFee, secondFee);
 
       const band = feeBand.value;
       if(band){
-        if(band === "0-100")   return fee >= 0   && fee < 100;
-        if(band === "100-200") return fee >= 100 && fee < 200;
-        if(band === "200-300") return fee >= 200 && fee < 300;
-        if(band === "300-400") return fee >= 300 && fee < 400;
-        if(band === "400+")    return fee >= 400;
+        if(band === "0-100")   return feeLow < 100 && feeHigh >= 0;
+        if(band === "100-200") return feeLow < 200 && feeHigh >= 100;
+        if(band === "200-300") return feeLow < 300 && feeHigh >= 200;
+        if(band === "300-400") return feeLow < 400 && feeHigh >= 300;
+        if(band === "400+")    return feeHigh >= 400;
         return true;
       }
 
@@ -1974,7 +2010,7 @@
         feeMax.value = String(max);
       }
       syncFeeLabelAndFill();
-      return fee >= min && fee <= max;
+      return feeHigh >= min && feeLow <= max;
     }
 
     function passesDistrict(c){
@@ -2029,7 +2065,7 @@
         ...(c.targetLevels||[]),
         ...(c.examType||[]),
         c.experience, c.qualification, c.timeSlots, ...(c.teachingLanguages||[]), c.notes,
-        (c.fee ?? "") + ""
+        c.feeDisplay, (c.fee ?? "") + "", (c.feeMax ?? "") + ""
       ].join(' ').toLowerCase();
       return hay.includes(k);
     }
@@ -2143,7 +2179,7 @@
 
             <div class="foot">
               <span>點擊查看完整導師資料</span>
-              <span class="budget">${(c.fee || c.fee===0) ? `HK$ ${esc(c.fee)}/小時` : '面議'}</span>
+              <span class="budget">${c.feeDisplay ? esc(c.feeDisplay) : ((c.fee || c.fee===0) ? `HK$ ${esc(c.fee)}/小時` : '面議')}</span>
             </div>
           `;
           card.addEventListener('click', ()=> openProfile(c));
@@ -2184,12 +2220,14 @@
       kvBasic.innerHTML = `
         <b>教學年資</b><div>${esc(c.years ?? '—')}</div>
         <b>導師性別</b><div>${esc(c.gender ?? '—')}</div>
-        <b>教學類別 / 科目</b><div>${esc(c.mainCategory ?? '—')}｜${esc((c.subjects||[]).join('、') || '—')}</div>
+        <b>教學類別 / 科目</b><div>${c.profileSubjectsMultiline && c.subjects?.length
+          ? c.subjects.map(subject => esc(subject)).join('<br>')
+          : `${esc(c.mainCategory ?? '—')}｜${esc((c.subjects||[]).join('、') || '—')}`}</div>
         <b>服務地區</b><div>${esc(c.district ?? '—')}${c.areaDetail ? `｜${esc(c.areaDetail)}` : ''}</div>
         <b>授課模式</b><div>${esc(c.mode ?? '—')}</div>
       `;
       kvExpect.innerHTML = `
-        <b>時薪</b><div>HK$ ${esc(c.fee ?? '—')} / 小時</div>
+        <b>時薪</b><div>${c.feeDisplay ? esc(c.feeDisplay) : `HK$ ${esc(c.fee ?? '—')} / 小時`}</div>
         <b>對象</b><div>${esc((c.targetLevels||[]).join('、') || '—')}</div>
         <b>應試 / 課程</b><div>${esc((c.examType||[]).join('、') || '—')}</div>
         <b>教學經驗</b><div>${esc(c.experience ?? '—')}</div>
