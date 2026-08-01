@@ -2260,7 +2260,9 @@
         <b>教學類別 / 科目</b><div>${c.profileSubjectsMultiline && c.subjects?.length
           ? c.subjects.map(subject => esc(subject)).join('<br>')
           : `${esc(c.mainCategory ?? '—')}｜${esc((c.subjects||[]).join('、') || '—')}`}</div>
-        <b>服務地區</b><div>${esc(c.district ?? '—')}${c.areaDetail ? `｜${esc(c.areaDetail)}` : ''}</div>
+        <b>服務地區</b><div>${Array.isArray(c.districts) && c.districts.length
+          ? esc(c.districts.join(', '))
+          : `${esc(c.district ?? '—')}${c.areaDetail ? `｜${esc(c.areaDetail)}` : ''}`}</div>
         <b>授課模式</b><div>${esc(c.mode ?? '—')}</div>
       `;
       kvExpect.innerHTML = `
